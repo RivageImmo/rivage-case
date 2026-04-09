@@ -21,6 +21,7 @@ export default defineConfig({
       port: 5173,
     },
     allowedHosts: true,
+    cors: true,
   },
   css: {
     preprocessorOptions: {
