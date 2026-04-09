@@ -1,0 +1,16 @@
+@each $val in flex-start, flex-end, center, stretch, baseline {
+  .align-items-#{$val} { align-items: $val; }
+  .align-self-#{$val} { align-self: $val; }
+}
+
+@each $val in flex-start, flex-end, center, space-between, space-around, space-evenly {
+  .justify-content-#{$val} { justify-content: $val; }
+}
+
+.flex-column { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+.flex-1 { flex: 1; }
+.flex-grow-1 { flex-grow: 1; }
+.flex-shrink-0 { flex-shrink: 0; }

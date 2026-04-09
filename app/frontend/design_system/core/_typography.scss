@@ -1,0 +1,48 @@
+@use 'colors' as colors;
+
+$font-family: 'Inter', sans-serif;
+$font-size: 14px;
+$font-line-height: 1.5;
+
+body {
+  font-size: $font-size;
+  color: colors.$font-color;
+  line-height: $font-line-height;
+}
+
+html, body, p, ol, ul, li, dl, dt, dd, blockquote, figure, fieldset, legend, textarea, pre, iframe, hr, h1, h2, h3, h4, h5, h6, button, select, input {
+  font-family: $font-family;
+}
+
+// Font weights
+$font-weight-300: 300;
+$font-weight-400: 400;
+$font-weight-500: 500;
+$font-weight-600: 600;
+$font-weight-700: 700;
+
+@each $weight in 300, 400, 500, 600, 700 {
+  .font-weight-#{$weight} { font-weight: $weight; }
+}
+
+// Font sizes
+$font-sizes: (10: 0.625rem, 12: 0.75rem, 14: 0.875rem, 16: 1rem, 18: 1.125rem, 20: 1.25rem, 24: 1.5rem, 28: 1.75rem, 32: 2rem);
+
+@each $size, $value in $font-sizes {
+  .font-size-#{$size} { font-size: $value; }
+}
+
+// Text alignment
+@each $pos in start, end, center, left, right {
+  .text-align-#{$pos} { text-align: $pos; }
+}
+
+.text-truncate-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-nowrap { white-space: nowrap; }
+
+h1.h1 { font-size: 1.125rem; font-weight: 600; }

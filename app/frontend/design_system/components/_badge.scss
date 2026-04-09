@@ -1,0 +1,50 @@
+@use '../core/colors' as colors;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &--success {
+    background-color: colors.$success-50;
+    color: colors.$success-700;
+  }
+
+  &--danger {
+    background-color: colors.$danger-50;
+    color: colors.$danger-700;
+  }
+
+  &--warning {
+    background-color: colors.$warning-50;
+    color: colors.$warning-700;
+  }
+
+  &--info {
+    background-color: colors.$primary-50;
+    color: colors.$primary-700;
+  }
+
+  &--neutral {
+    background-color: colors.$grey-100;
+    color: colors.$grey-700;
+  }
+
+  &__dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &--success &__dot { background-color: colors.$success-500; }
+  &--danger &__dot { background-color: colors.$danger-500; }
+  &--warning &__dot { background-color: colors.$warning-500; }
+  &--info &__dot { background-color: colors.$primary-500; }
+  &--neutral &__dot { background-color: colors.$grey-500; }
+}

@@ -1,0 +1,16 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  url: <%= ENV.fetch('DATABASE_URL', 'postgres://postgres:postgres@localhost:5432/rivage_case_development') %>
+
+test:
+  <<: *default
+  url: <%= ENV.fetch('DATABASE_URL_TEST', 'postgres://postgres:postgres@localhost:5432/rivage_case_test') %>
+
+production:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>

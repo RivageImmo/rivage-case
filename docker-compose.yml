@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: bin/dev
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+      - "3036:3036"
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rivage_case_development
+      RAILS_ENV: development
+      VITE_RUBY_HOST: 0.0.0.0
+    tty: true
+    stdin_open: true
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:

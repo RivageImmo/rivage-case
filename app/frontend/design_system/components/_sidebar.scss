@@ -1,0 +1,107 @@
+@use '../core/colors' as colors;
+
+.sidebar {
+  width: 15.625rem;
+  min-height: 100vh;
+  background: linear-gradient(180deg, colors.$primary-800 0%, colors.$primary-950 100%);
+  color: colors.$white;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  &__header {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: colors.$white;
+    text-decoration: none;
+  }
+
+  &__nav {
+    padding: 0.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: colors.$white;
+    }
+
+    &--active {
+      background-color: colors.$secondary-300;
+      color: colors.$primary-900;
+
+      &:hover {
+        background-color: colors.$secondary-400;
+        color: colors.$primary-900;
+      }
+
+      svg { stroke: colors.$primary-900; }
+    }
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+  }
+
+  &__spacer { flex: 1; }
+
+  &__footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: colors.$secondary-300;
+    color: colors.$primary-900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  &__user-role {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}

@@ -1,0 +1,31 @@
+// Spacing scale: 0.25rem (4px) base unit
+$spacings: (
+  0: 0, 0-5: 0.125rem, 1: 0.25rem, 1-5: 0.375rem, 2: 0.5rem, 2-5: 0.625rem,
+  3: 0.75rem, 3-5: 0.875rem, 4: 1rem, 5: 1.25rem, 6: 1.5rem, 7: 1.75rem,
+  8: 2rem, 9: 2.25rem, 10: 2.5rem, 12: 3rem, 14: 3.5rem, 16: 4rem, 20: 5rem, 24: 6rem
+);
+
+@each $key, $value in $spacings {
+  .m-#{$key} { margin: $value; }
+  .mt-#{$key} { margin-top: $value; }
+  .mb-#{$key} { margin-bottom: $value; }
+  .ml-#{$key} { margin-left: $value; }
+  .mr-#{$key} { margin-right: $value; }
+  .mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .my-#{$key} { margin-top: $value; margin-bottom: $value; }
+
+  .p-#{$key} { padding: $value; }
+  .pt-#{$key} { padding-top: $value; }
+  .pb-#{$key} { padding-bottom: $value; }
+  .pl-#{$key} { padding-left: $value; }
+  .pr-#{$key} { padding-right: $value; }
+  .px-#{$key} { padding-left: $value; padding-right: $value; }
+  .py-#{$key} { padding-top: $value; padding-bottom: $value; }
+
+  .gap-#{$key} { gap: $value; }
+}
+
+.m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }

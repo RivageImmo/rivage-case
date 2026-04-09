@@ -1,0 +1,50 @@
+@use '../core/colors' as colors;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &--primary {
+    background-color: colors.$primary-500;
+    color: colors.$white;
+    border-color: colors.$primary-500;
+    &:hover:not(:disabled) { background-color: colors.$primary-600; }
+  }
+
+  &--secondary {
+    background-color: colors.$white;
+    color: colors.$grey-700;
+    border-color: colors.$grey-300;
+    &:hover:not(:disabled) { background-color: colors.$grey-50; }
+  }
+
+  &--danger {
+    background-color: colors.$danger-500;
+    color: colors.$white;
+    border-color: colors.$danger-500;
+    &:hover:not(:disabled) { background-color: colors.$danger-600; }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: colors.$grey-600;
+    &:hover:not(:disabled) { background-color: colors.$grey-50; }
+  }
+
+  &--sm { padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+  &--lg { padding: 0.75rem 1.25rem; font-size: 1rem; }
+}

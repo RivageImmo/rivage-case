@@ -1,0 +1,32 @@
+@use '../core/colors' as colors;
+
+.card {
+  background-color: colors.$white;
+  border: 1px solid colors.$grey-200;
+  border-radius: 0.75rem;
+  overflow: hidden;
+
+  &__header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid colors.$grey-200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: colors.$grey-900;
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+
+  &__footer {
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid colors.$grey-200;
+    background-color: colors.$grey-25;
+  }
+}

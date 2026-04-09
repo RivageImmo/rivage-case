@@ -1,0 +1,42 @@
+@use '../core/colors' as colors;
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  thead {
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.75rem;
+      color: colors.$grey-600;
+      background-color: colors.$grey-50;
+      border-bottom: 1px solid colors.$grey-200;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid colors.$grey-100;
+      transition: background-color 0.1s ease;
+
+      &:hover { background-color: colors.$grey-25; }
+      &:last-child { border-bottom: none; }
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      color: colors.$grey-700;
+      vertical-align: middle;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: colors.$grey-400;
+  }
+}

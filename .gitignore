@@ -1,0 +1,34 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore all environment files.
+/.env*
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+/public/assets
+
+# Ignore DS_Store files
+.DS_Store
+**/.DS_Store
+
+# Vite Ruby
+/public/vite*
+node_modules
+*.local
+
+# Ignore master key
+/config/master.key
+
+# Gemfile.lock generated in container
+Gemfile.lock
+GRILLE_EVALUATION.md

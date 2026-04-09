@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+
+echo "==> Installing gems..."
+bundle install --quiet
+
+echo "==> Installing npm packages..."
+npm install --silent 2>/dev/null
+
+echo "==> Preparing database..."
+bin/rails db:prepare
+
+echo "==> Removing stale PID..."
+rm -f tmp/pids/server.pid
+
+echo "==> Ready!"
+exec "$@"
