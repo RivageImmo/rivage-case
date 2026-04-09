@@ -24,6 +24,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      vite:
+        condition: service_started
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/rivage_case_development
       RAILS_ENV: development
@@ -33,12 +35,12 @@ services:
 
   vite:
     build: .
-    entrypoint: ["sh", "-c", "npm install --silent && npx vite --port 3036"]
+    entrypoint: ["sh", "-c", "npm install --silent && npx vite --port 5173"]
     volumes:
       - .:/app
       - node_modules:/app/node_modules
     ports:
-      - "3036:3036"
+      - "5173:5173"
     environment:
       NODE_ENV: development
       VITE_RUBY_HOST: 0.0.0.0
