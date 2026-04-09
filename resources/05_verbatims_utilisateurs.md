@@ -20,6 +20,8 @@ Extraits d'entretiens menés auprès d'utilisateurs de logiciels de gestion loca
 
 > "La co-location c'est galère. Deux locataires sur un même bail, chacun paie sa moitié. Si l'un des deux part, il faut modifier le bail, recalculer les parts, vérifier que l'autre est solvable. J'aimerais voir clairement qui paie quoi."
 
+> "La semaine dernière, Mme Faure m'a appelée. Elle ne comprenait pas pourquoi elle n'avait reçu que 250 EUR au lieu des 1 050 EUR habituels. J'ai dû ouvrir le bail, vérifier que la CAF avait bien versé sa part, constater que Karim n'avait pas payé le complément, recalculer les honoraires... Ça m'a pris 5 minutes au téléphone. Si j'avais eu la situation sous les yeux en un clic, ça aurait pris 30 secondes."
+
 ---
 
 ## Thomas — Directeur de l'agence, 12 ans d'expérience

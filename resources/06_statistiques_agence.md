@@ -1,5 +1,7 @@
 # Statistiques de l'agence — Mars 2026
 
+*Note : ces statistiques décrivent l'agence dans son ensemble. Les données de démonstration de l'application ne contiennent qu'un échantillon représentatif de 8 propriétaires.*
+
 Chiffres clés de l'Agence Immobilière du Rhône, utilisés en interne pour le pilotage.
 
 ---

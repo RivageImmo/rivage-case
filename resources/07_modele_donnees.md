@@ -103,3 +103,234 @@ GET /api/invoices        — Liste des factures
 ```
 
 Tous les montants sont en **centimes** (ex : 85000 = 850,00 EUR).
+
+---
+
+## Champs calculés par l'API
+
+L'API retourne plusieurs champs calculés qui ne sont pas directement stockés en base de données. Ces champs sont construits à la volée par les contrôleurs ou les méthodes de modèle.
+
+### Sur Landlord (via le contrôleur)
+
+| Champ calculé | Type | Description |
+|---------------|------|-------------|
+| `display_name` | string | Si `nature = company` : retourne `company_name`. Si `nature = physical` : retourne `"first_name last_name"`. |
+| `properties_count` | integer | Nombre total de biens du propriétaire. |
+| `active_leases_count` | integer | Nombre de baux actifs (status = `active`). |
+| `vacant_properties_count` | integer | Nombre de biens sans bail actif (`properties_count - nombre de biens avec un bail actif`). |
+| `total_rent_cents` | integer | Somme des loyers mensuels de tous les baux actifs (en centimes). |
+| `total_charges_cents` | integer | Somme des charges mensuelles de tous les baux actifs (en centimes). |
+| `total_balance_cents` | integer | Somme des soldes de tous les baux actifs (en centimes). Négatif = impayé global. |
+| `pending_invoices_cents` | integer | Somme des montants des factures en statut `pending` (en centimes). |
+| `has_expiring_lease` | boolean | `true` si au moins un bail actif a une `end_date` dans les 30 prochains jours. |
+
+### Sur Property (via le contrôleur)
+
+| Champ calculé | Type | Description |
+|---------------|------|-------------|
+| `full_address` | string | Concaténation de `address` et `unit_number` (séparés par une virgule). Ex : `"45 rue de Rivoli, Apt 3B"`. |
+| `vacant` | boolean | `true` si le bien n'a aucun bail actif. |
+
+### Sur Lease (via le contrôleur et le modèle)
+
+| Champ calculé | Type | Description |
+|---------------|------|-------------|
+| `total_due_cents` | integer | `rent_amount_cents + charges_amount_cents` — montant total dû mensuellement (en centimes). |
+| `expires_soon` | boolean | `true` si le bail est actif, possède une `end_date`, et que celle-ci est dans les 30 prochains jours. |
+
+### Sur Tenant (via le modèle)
+
+| Champ calculé | Type | Description |
+|---------------|------|-------------|
+| `display_name` | string | `"first_name last_name"`. |
+| `share` | decimal | Part du locataire dans le bail (provient de la table de liaison `lease_tenants`). Ex : `"100.0"` pour un locataire unique. |
+
+### Sur Invoice (via le contrôleur)
+
+| Champ calculé | Type | Description |
+|---------------|------|-------------|
+| `property_address` | string (nullable) | Adresse complète du bien lié à la facture (`full_address` du Property). `null` si la facture n'est pas liée à un bien spécifique. |
+
+---
+
+## Exemples de réponses API
+
+### GET /api/landlords — Liste des propriétaires
+
+Retourne un tableau JSON. Chaque élément contient les données du propriétaire avec des statistiques agrégées. Voici les 2 premiers éléments (sur 8 au total) :
+
+```json
+[
+  {
+    "id": 9,
+    "nature": "physical",
+    "display_name": "Marie Dupont",
+    "company_name": null,
+    "email": "marie.dupont@email.com",
+    "phone": "06 12 34 56 78",
+    "payment_day": null,
+    "management_fee_rate": null,
+    "payment_enabled": true,
+    "payment_disabled_reason": null,
+    "properties_count": 1,
+    "active_leases_count": 1,
+    "vacant_properties_count": 0,
+    "total_rent_cents": 85000,
+    "total_charges_cents": 8000,
+    "total_balance_cents": 0,
+    "pending_invoices_cents": 0,
+    "has_expiring_lease": false
+  },
+  {
+    "id": 10,
+    "nature": "company",
+    "display_name": "SCI Les Oliviers",
+    "company_name": "SCI Les Oliviers",
+    "email": "contact@sci-oliviers.fr",
+    "phone": "06 98 76 54 32",
+    "payment_day": 15,
+    "management_fee_rate": "6.5",
+    "payment_enabled": true,
+    "payment_disabled_reason": null,
+    "properties_count": 3,
+    "active_leases_count": 2,
+    "vacant_properties_count": 1,
+    "total_rent_cents": 255000,
+    "total_charges_cents": 26000,
+    "total_balance_cents": 0,
+    "pending_invoices_cents": 0,
+    "has_expiring_lease": false
+  }
+]
+```
+
+### GET /api/landlords/:id — Détail d'un propriétaire
+
+Retourne l'objet propriétaire enrichi avec la liste de ses biens (et leurs baux actifs avec locataires et paiements récents) et ses factures fournisseur.
+
+```json
+{
+  "id": 9,
+  "nature": "physical",
+  "display_name": "Marie Dupont",
+  "company_name": null,
+  "email": "marie.dupont@email.com",
+  "phone": "06 12 34 56 78",
+  "payment_day": null,
+  "management_fee_rate": null,
+  "payment_enabled": true,
+  "payment_disabled_reason": null,
+  "properties_count": 1,
+  "active_leases_count": 1,
+  "vacant_properties_count": 0,
+  "total_rent_cents": 85000,
+  "total_charges_cents": 8000,
+  "total_balance_cents": 0,
+  "pending_invoices_cents": 0,
+  "has_expiring_lease": false,
+  "siret": null,
+  "properties": [
+    {
+      "id": 13,
+      "address": "45 rue de Rivoli",
+      "unit_number": "Apt 3B",
+      "full_address": "45 rue de Rivoli, Apt 3B",
+      "city": "Paris",
+      "zip_code": "75001",
+      "nature": "apartment",
+      "area_sqm": "55.0",
+      "rooms_count": 2,
+      "vacant": false,
+      "lease": {
+        "id": 13,
+        "status": "active",
+        "lease_type": "residential_unfurnished",
+        "start_date": "2024-09-01",
+        "end_date": "2027-08-31",
+        "rent_amount_cents": 85000,
+        "charges_amount_cents": 8000,
+        "deposit_amount_cents": 85000,
+        "total_due_cents": 93000,
+        "balance_cents": 0,
+        "expires_soon": false,
+        "tenants": [
+          {
+            "id": 14,
+            "display_name": "Jean Martin",
+            "email": "jean.martin@gmail.com",
+            "phone": "06 11 22 33 44",
+            "caf_amount_cents": null,
+            "share": "100.0"
+          }
+        ],
+        "recent_payments": [
+          {
+            "id": 40,
+            "date": "2026-03-03",
+            "amount_cents": 93000,
+            "payment_type": "rent",
+            "payment_method": "bank_transfer"
+          },
+          {
+            "id": 39,
+            "date": "2026-02-05",
+            "amount_cents": 93000,
+            "payment_type": "rent",
+            "payment_method": "bank_transfer"
+          },
+          {
+            "id": 38,
+            "date": "2026-01-08",
+            "amount_cents": 93000,
+            "payment_type": "rent",
+            "payment_method": "bank_transfer"
+          }
+        ]
+      }
+    }
+  ],
+  "invoices": []
+}
+```
+
+### GET /api/stats — KPIs globaux
+
+Retourne un objet unique avec les indicateurs clés de performance de l'agence.
+
+```json
+{
+  "landlords_count": 8,
+  "properties_count": 12,
+  "active_leases_count": 11,
+  "vacant_properties_count": 1,
+  "occupancy_rate": 91.7,
+  "total_monthly_rent_cents": 1180000,
+  "total_monthly_charges_cents": 124500,
+  "total_balance_cents": -230000,
+  "unpaid_leases_count": 1,
+  "total_unpaid_cents": 230000,
+  "expiring_leases_count": 1,
+  "pending_invoices_count": 4,
+  "pending_invoices_total_cents": 3430000,
+  "disabled_payments_count": 1
+}
+```
+
+**Détail des champs stats :**
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `landlords_count` | integer | Nombre total de propriétaires. |
+| `properties_count` | integer | Nombre total de biens gérés. |
+| `active_leases_count` | integer | Nombre de baux actifs. |
+| `vacant_properties_count` | integer | Nombre de biens sans bail actif. |
+| `occupancy_rate` | float | Taux d'occupation en pourcentage (arrondi à 1 décimale). Formule : `(biens occupés / biens totaux) * 100`. |
+| `total_monthly_rent_cents` | integer | Somme des loyers mensuels des baux actifs (en centimes). |
+| `total_monthly_charges_cents` | integer | Somme des charges mensuelles des baux actifs (en centimes). |
+| `total_balance_cents` | integer | Solde global tous baux actifs confondus (en centimes). Négatif = impayés. |
+| `unpaid_leases_count` | integer | Nombre de baux avec un solde négatif (impayés). |
+| `total_unpaid_cents` | integer | Montant total des impayés en valeur absolue (en centimes). |
+| `expiring_leases_count` | integer | Nombre de baux actifs dont la date de fin est dans les 30 prochains jours. |
+| `pending_invoices_count` | integer | Nombre de factures fournisseur en attente de paiement. |
+| `pending_invoices_total_cents` | integer | Montant total des factures en attente (en centimes). |
+| `disabled_payments_count` | integer | Nombre de propriétaires dont les versements sont désactivés (`payment_enabled = false`). |

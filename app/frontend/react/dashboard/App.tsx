@@ -44,8 +44,8 @@ export default function DashboardApp() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-header__title">Tableau de bord</h1>
-        <p className="page-header__subtitle">TODO — Construis ta solution ici</p>
+        <h1 className="page-header__title">Propriétaires</h1>
+        <p className="page-header__subtitle">TODO — Construis ta page ici</p>
       </div>
 
       <div className="card">

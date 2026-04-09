@@ -596,6 +596,16 @@ create_monthly_payments(lease_leroy,
   months: [Date.new(2026, 1, 1), Date.new(2026, 2, 1), Date.new(2026, 3, 1)],
   method: 'sepa_debit')
 
+Invoice.create!(
+  landlord: jm_leroy,
+  property: prop_leroy,
+  supplier_name: 'Plomberie Leroy',
+  description: 'Réparation fuite salle de bain',
+  amount_cents: 28_500,
+  status: 'pending',
+  due_date: Date.new(2026, 4, 20)
+)
+
 # =============================================================================
 # 8. Catherine Blanc — Versement désactivé + co-location
 # =============================================================================
