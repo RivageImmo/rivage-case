@@ -20,11 +20,12 @@ export default defineConfig({
       host: 'localhost',
       port: 3036,
     },
+    allowedHosts: ['vite', 'localhost'],
   },
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern',
+        api: 'modern-compiler',
         quietDeps: true,
       },
     },
