@@ -19,7 +19,7 @@ COPY Gemfile ./
 RUN bundle install
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 
 COPY . .
 
