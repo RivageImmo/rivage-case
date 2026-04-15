@@ -18,8 +18,8 @@ WORKDIR /app
 COPY Gemfile ./
 RUN bundle install
 
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 
