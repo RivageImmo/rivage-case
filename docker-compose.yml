@@ -35,7 +35,7 @@ services:
 
   vite:
     build: .
-    entrypoint: ["sh", "-c", "npm install && npx vite --port 5173"]
+    entrypoint: ["sh", "-c", "rm -f package-lock.json && npm install && npx vite --port 5173"]
     volumes:
       - .:/app
       - node_modules:/app/node_modules
