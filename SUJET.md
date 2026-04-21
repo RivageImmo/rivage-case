@@ -154,7 +154,7 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
           "status": "active",            // active | terminated | upcoming
           "lease_type": "residential_unfurnished",
           "start_date": "2023-06-01",
-          "end_date": "2026-04-28",
+          "end_date": "2027-06-30",
           "rent_amount_cents": 78000,
           "charges_amount_cents": 6240,
           "total_due_cents": 84240,
@@ -169,16 +169,13 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
               "share": "100.0", ... }
           ],
 
-          // Paiements datés dans mars 2026 (le mois de collecte)
+          // Paiements datés dans avril 2026 (le mois courant, collecte).
+          // Un paiement NÉGATIF = rejet SEPA / annulation — il annule l'encaissement correspondant.
           "payments_collection_month": [
-            { "date": "2026-03-05", "amount_cents": 84240,
+            { "date": "2026-04-05", "amount_cents": 84240,
               "payment_type": "rent",    // rent | deposit | regularization
               "payment_method": "bank_transfer" }  // bank_transfer | sepa_debit | check | caf
-          ],
-
-          // Paiements datés entre le 1er avril et aujourd'hui (8 avril).
-          // Utile pour détecter les rejets SEPA (montants négatifs).
-          "payments_post_month": []
+          ]
         }
       ]
     }
@@ -189,7 +186,7 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
       "description": "Réfection toiture",
       "amount_cents": 850000,
       "status": "pending",               // pending | paid
-      "due_date": "2026-04-15",
+      "due_date": "2026-04-20",
       "paid_date": null,
       "property_id": 8,
       "property_address": "22 rue de la République" }

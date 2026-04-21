@@ -30,8 +30,8 @@ Un propriétaire signe un ou plusieurs mandats de gestion avec l'agence. Chaque 
 | id | integer | Identifiant unique |
 | landlord_id | integer | Propriétaire du mandat |
 | reference | string | Référence interne (ex : `MAND-2024-001`) |
-| management_fee_rate | decimal (nullable) | Taux d'honoraires du mandat (null = défaut agence : 7%) |
-| payment_day | integer (nullable) | Jour de versement du mandat (null = défaut agence : le 10) |
+| management_fee_rate | decimal | Taux d'honoraires du mandat (défaut agence : 7%) |
+| payment_day | integer | Jour de versement du mandat (défaut agence : le 10) |
 | signed_at | date | Date de signature |
 | ended_at | date (nullable) | Date de résiliation si applicable |
 
