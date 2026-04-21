@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     resources :properties, only: %i[index]
     resources :invoices, only: %i[index]
     get 'stats', to: 'stats#index'
+    resources :payouts, only: %i[index]
   end
 end

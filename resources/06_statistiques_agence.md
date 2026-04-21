@@ -1,6 +1,6 @@
 # Statistiques de l'agence — Mars 2026
 
-*Note : ces statistiques décrivent l'agence dans son ensemble. Les données de démonstration de l'application ne contiennent qu'un échantillon représentatif de 8 propriétaires.*
+*Note : la base de démonstration contient 103 propriétaires réalistes : environ 85% sont en situation standard (loyer encaissé → honoraires → virement sans friction), et 15% présentent au moins un signal qui demande attention (impayé, versement bloqué, facture lourde, bail qui expire, rejet SEPA, etc.).*
 
 Chiffres clés de l'Agence Immobilière du Rhône, utilisés en interne pour le pilotage.
 
@@ -12,7 +12,7 @@ Chiffres clés de l'Agence Immobilière du Rhône, utilisés en interne pour le 
 | Métrique                    | Valeur |
 | --------------------------- | ------ |
 | Nombre de lots gérés        | 247    |
-| Nombre de propriétaires     | 43     |
+| Nombre de propriétaires     | 103    |
 | Nombre de locataires actifs | 231    |
 | Baux résidentiels (nus)     | 168    |
 | Baux résidentiels (meublés) | 41     |

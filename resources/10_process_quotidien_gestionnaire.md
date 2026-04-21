@@ -1,4 +1,45 @@
-# Le process quotidien du gestionnaire locatif
+# Le process quotidien — gestionnaire & comptable
+
+## La journée clé de Nathalie — comptable mandant — le 8 de chaque mois
+
+### 8h30 — La run des versements commence
+
+Chaque mois, entre le 5 et le 10, Nathalie lance **la run des versements propriétaires**. C'est le moment où l'agence décide, pour chaque propriétaire, du montant à reverser. Les virements partent automatiquement le 10 à partir des décisions validées.
+
+Sur 103 propriétaires :
+- ~85 sont "mécaniques" : loyer encaissé − honoraires = virement. Nathalie les passe en quelques secondes chacun.
+- ~15 demandent réflexion : un signal remonté (impayé, rejet SEPA, facture lourde, versement bloqué, bail qui se termine, propriétaire débiteur…) oblige Nathalie à arbitrer.
+- ~3 sont à haut risque : versement désactivé explicitement, propriétaire en débit profond, rejet SEPA sur le mois.
+
+**L'enjeu de la run** : aller vite sur les cas simples, lent sur les cas risqués, sans rater les pièges.
+
+### Les décisions possibles pour chaque propriétaire
+
+- **Valider** : le versement part tel que proposé. 80% des cas.
+- **Bloquer** : aucun virement ne part. Motif obligatoire, communicable (travaux en cours, attente de rapprochement bancaire, demande explicite du propriétaire, procédure contentieuse en cours).
+- **Ajuster** : virement modifié (en général réduit). Motif obligatoire. Cas typiques : étalement d'une grosse facture sur plusieurs mois, provision pour travaux à venir, acompte partiel en attendant une régularisation.
+
+### Les pièges classiques à détecter
+
+**Le piège du multi-échéances.** Un locataire paie 2 mois d'un coup un mois. Le mois suivant, zéro encaissement. En surface on voit "0 € encaissé, bloquer !" — mais c'est normal. La dette est à jour.
+
+**Le piège du SEPA rejeté.** Un prélèvement a été débité puis annulé par la banque du locataire sous 5 jours. L'encaissement affiché est bidon. Si on verse, on avance de l'argent qu'on n'a pas.
+
+**Le piège du DG entrant.** Un nouveau locataire arrive : son dépôt de garantie et son premier loyer arrivent ensemble. L'encaissement est énorme ce mois-ci, mais le DG n'est PAS à reverser au propriétaire — c'est une somme consignée.
+
+**Le piège de la facture déjà retenue.** Une grosse facture a été déduite le mois dernier. Si on la voit encore dans les charges à imputer ce mois-ci, on la déduit deux fois.
+
+**Le piège du mandat récent.** Un nouveau propriétaire arrive. Le RIB est fraîchement saisi, les paramètres pas forcément vérifiés. Un virement sur un mauvais IBAN est douloureux à récupérer.
+
+### Après la run
+
+Nathalie génère les CRG (compte rendu de gestion) pour chaque propriétaire versé, et les envoie. Les propriétaires bloqués reçoivent un mail spécifique expliquant le motif.
+
+Le 10, les virements partent. Le 11 est généralement une matinée chargée en appels entrants : propriétaires qui s'étonnent, demandent des explications, négocient. Si la run a été bien faite, ces appels sont rares. Sinon, c'est la journée noire.
+
+---
+
+## La journée type de Claire (gestionnaire, 180 lots)
 
 ## La journée type de Claire (gestionnaire, 180 lots)
 

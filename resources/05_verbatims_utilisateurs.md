@@ -44,9 +44,17 @@ Extraits d'entretiens menés auprès d'utilisateurs de logiciels de gestion loca
 
 > "Pour moi l'important c'est les chiffres. Je veux savoir : combien on a encaissé ce mois-ci, combien reste à encaisser, quel est le montant total des reversements à faire, et est-ce qu'on a la trésorerie pour."
 
+> "Le 8 de chaque mois, je bloque ma matinée pour préparer la run des reversements. J'ai une centaine de propriétaires à passer en revue avant le 10. Pour 80% c'est mécanique : loyer encaissé − honoraires − virement. Mais pour les 20% restants, il faut ralentir, vérifier, parfois appeler le gestionnaire."
+
 > "Les propriétaires débiteurs, c'est mon problème numéro 1. Quand il y a eu de gros travaux, le propriétaire peut se retrouver avec un solde négatif. Ça veut dire qu'on lui doit rien ce mois-ci, et même qu'il nous doit de l'argent. C'est très délicat à communiquer."
 
 > "Je bloque les versements de certains propriétaires temporairement. Par exemple quand il y a des travaux importants en cours : je consigne les fonds jusqu'à ce que la facture soit payée. Mais il faut que ce soit visible, sinon le gestionnaire promet au propriétaire qu'il va être payé et c'est le bazar."
+
+> "Le pire des erreurs c'est verser à quelqu'un à qui il ne fallait pas. Une fois que l'argent est parti, c'est galère à récupérer. J'en ai encore une en cours depuis 3 mois où le propriétaire ne répond plus. À l'inverse, bloquer par erreur, c'est un appel furieux le 11 et parfois le mandat qui saute."
+
+> "Les rejets de prélèvement SEPA, c'est traître. Sur le papier on a encaissé, mais 3 jours après la banque du locataire rejette et l'argent revient. Si j'ai déjà reversé au propriétaire entre temps, j'ai avancé de l'argent qu'on n'a pas."
+
+> "Le piège classique c'est le locataire qui paie 2 mois d'un coup. Le mois suivant, je vois 0 encaissé et je commence à paniquer. Il faut regarder l'historique, voir qu'en fait tout va bien, et ne PAS bloquer le versement propriétaire."
 
 > "Les baux commerciaux c'est un monde à part. Les montants sont plus élevés, les dépôts de garantie aussi, et il y a souvent de la TVA. Je dois pouvoir les distinguer facilement des baux résidentiels."
 

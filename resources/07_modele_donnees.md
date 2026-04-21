@@ -93,14 +93,17 @@ Un bail est lié à ses locataires via la table `lease_tenants` (pour gérer la 
 ## Endpoints API
 
 ```
-GET /api/stats           — KPIs globaux
-GET /api/landlords       — Liste des propriétaires (avec stats agrégées)
-GET /api/landlords/:id   — Détail d'un propriétaire (biens, baux, paiements, factures)
-GET /api/leases          — Liste des baux
-GET /api/leases/:id      — Détail d'un bail (avec historique de paiements)
-GET /api/properties      — Liste des biens
-GET /api/invoices        — Liste des factures
+GET /api/payout-runs/current  — Run des versements propriétaires prête à passer en revue (endpoint principal du sujet)
+GET /api/stats                — KPIs globaux
+GET /api/landlords            — Liste des propriétaires (avec stats agrégées)
+GET /api/landlords/:id        — Détail d'un propriétaire (biens, baux, paiements, factures)
+GET /api/leases               — Liste des baux
+GET /api/leases/:id           — Détail d'un bail (avec historique de paiements)
+GET /api/properties           — Liste des biens
+GET /api/invoices             — Liste des factures
 ```
+
+Le détail du payload `/api/payout-runs/current` (propositions de versement, signaux, breakdown, actions) est documenté dans `SUJET.md` section 6.
 
 Tous les montants sont en **centimes** (ex : 85000 = 850,00 EUR).
 
