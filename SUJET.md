@@ -197,31 +197,6 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 }
 ```
 
-### Ce que tu dois construire à partir de ces briques
-
-**Calcul du net à verser**
-- Somme des `payments_collection_month` de type `rent` par bail = loyers encaissés
-- Honoraires = loyers encaissés × taux **du mandat** rattaché au bien (avec fallback 7% si `null`)
-- Déductions : factures à retenir ce mois, régularisations de charges (montants négatifs en `payment_type: regularization`), dépôts de garantie à restituer (bail `terminated`)
-
-**Détection des situations** (liste non exhaustive — à toi de décider lesquelles tu traites et comment tu les hiérarchises)
-- Versement désactivé (`payment_enabled: false`)
-- Impayé ou paiement partiel (`payments_collection_month` < `total_due_cents`)
-- CAF seule (seul paiement = `payment_method: caf`, locataire n'a pas complété)
-- Rejet SEPA (paiement négatif dans `payments_post_month`)
-- Propriétaire débiteur (net calculé négatif)
-- Bail qui expire bientôt (`end_date` proche)
-- Dépôt de garantie à restituer (bail `terminated` récent)
-- Mandat récent (`mandate_started_at` récent)
-- Factures lourdes pendantes
-- Propriétaire multi-biens, multi-mandats, bail commercial
-
-**Classification et priorisation**
-Quelles propositions regrouper, lesquelles isoler, dans quel ordre les présenter. À toi de justifier.
-
-**Interaction**
-Un flow de décision adapté à passer rapidement 113 cas. Les actions (valider / bloquer / ajuster) nécessitent toutes un enregistrement traçable (motif pour bloquer/ajuster).
-
 ---
 
 ## 7. Déroulement
