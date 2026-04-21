@@ -93,7 +93,7 @@ app/frontend/react/dashboard/App.tsx
 
 ```
 GET /api/landlords        — Liste des propriétaires, chacun avec ses mandats, biens,
-                            baux actifs, paiements du mois et post-mois, factures.
+                            baux actifs et terminés, paiements du mois courant, factures.
 GET /api/landlords/:id    — Même forme pour un propriétaire unique
 ```
 
@@ -222,7 +222,6 @@ Le sujet est volontairement large. On ne s'attend pas à ce que tu traites tous 
 2. Utilise le design system et les composants fournis.
 3. Tu peux créer de nouveaux composants React si nécessaire, et de nouveaux endpoints API si tu en ressens le besoin (mais `/api/landlords` devrait suffire).
 4. Les actions (valider / bloquer / ajuster) sont mockées côté front — aucune mutation en base requise.
-5. Le sujet est volontairement large. On n'attend pas que tu traites chaque cas. On évalue ta capacité à prioriser, à modéliser le calcul correctement, et à livrer une expérience de décision cohérente.
 
 ---
 
