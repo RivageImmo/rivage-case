@@ -16,7 +16,7 @@ Nos clients sont des agences immobilières (50 à 2 000 lots gérés). Leurs uti
 
 ## 2. Le contexte
 
-Chaque mois, entre le 5 et le 10, la comptable mandant de l'agence passe en revue les versements propriétaires avant de déclencher les virements. Pour chaque propriétaire, elle peut **valider** le montant à verser, **bloquer** le versement avec un motif, ou **ajuster** (réduire, étaler).
+Chaque mois, vers le 15, la comptable mandant de l'agence passe en revue les versements propriétaires avant de déclencher les virements (qui partent vers le 20). Pour chaque propriétaire, elle peut **valider** le montant à verser, **bloquer** le versement avec un motif, ou **ajuster** (réduire, étaler).
 
 L'agence gère 113 propriétaires. La majorité est en situation standard (loyer encaissé, honoraires déduits, virement). Une minorité présente des situations qui demandent arbitrage : impayé, paiement partiel, rejet SEPA, facture de travaux importante, versement désactivé, bail qui se termine, dépôt de garantie à restituer, propriétaire avec plusieurs mandats aux taux différents.
 

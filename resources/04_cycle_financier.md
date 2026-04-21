@@ -46,7 +46,7 @@ Le solde restant après déductions est versé au propriétaire. La date et la l
 
 Le **taux d'honoraires** est lui aussi défini au niveau du mandat : un propriétaire qui a plusieurs mandats (conditions négociées à différentes époques) peut avoir un taux différent par bien.
 
-Concrètement, entre le 5 et le 10 du mois, la comptable mandant exécute la **run des versements** : elle passe en revue chaque propriétaire, valide, bloque ou ajuste le montant proposé, et les virements partent automatiquement. C'est un moment critique — une erreur (versement à tort ou blocage à tort) coûte cher en temps de recouvrement ou en satisfaction client.
+Concrètement, vers le 15 du mois, la comptable mandant exécute la **revue des versements** : elle passe en revue chaque propriétaire, valide, bloque ou ajuste le montant, et les virements partent automatiquement vers le 20. C'est un moment critique — une erreur (versement à tort ou blocage à tort) coûte cher en temps de recouvrement ou en satisfaction client.
 
 Le propriétaire reçoit un **CRG** (Compte Rendu de Gestion) détaillant les encaissements, les déductions, et le montant versé.
 

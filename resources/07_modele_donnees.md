@@ -122,9 +122,11 @@ GET /api/stats                     — KPIs globaux de l'agence (vue macro)
 
 Le détail du payload `/api/landlords` (mandats, propriétés, baux, paiements collectés, paiements post-mois, factures) est documenté dans `SUJET.md` section 6. **Aucun calcul n'est préfait** — le candidat doit construire lui-même le net à verser, la détection des signaux et la classification.
 
-**Défauts agence** : si `mandate.management_fee_rate` est `null`, appliquer 7%. Si `mandate.payment_day` est `null`, appliquer le 10.
+**Défauts agence** (stockés directement en DB comme valeurs par défaut des colonnes `mandates.management_fee_rate` et `mandates.payment_day`) :
+- Taux d'honoraires : **7 %**
+- Jour de versement : **le 10**
 
-**Contexte temporel du cas** : on est le **8 avril 2026**. Les virements partent le **10 avril**. Le mois de collecte à analyser est **mars 2026**. Les paiements datés après le 31 mars (ex : rejets SEPA) sont exposés via `payments_post_month` sur chaque bail.
+**Contexte temporel du cas** : on est le **15 avril 2026**. Les virements partent le **20 avril 2026**. Le mois de collecte à analyser est **avril 2026** (le mois courant). Les rejets SEPA apparaissent comme des paiements négatifs dans `payments_collection_month`.
 
 Tous les montants sont en **centimes** (ex : 85000 = 850,00 EUR).
 

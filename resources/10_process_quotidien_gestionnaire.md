@@ -1,10 +1,10 @@
 # Le process quotidien — gestionnaire & comptable
 
-## La journée clé de Nathalie — comptable mandant — le 8 de chaque mois
+## La journée clé de Nathalie — comptable mandant — mi-mois
 
-### 8h30 — La run des versements commence
+### 9h — La revue des versements commence
 
-Chaque mois, entre le 5 et le 10, Nathalie lance **la run des versements propriétaires**. C'est le moment où l'agence décide, pour chaque propriétaire, du montant à reverser. Les virements partent automatiquement le 10 à partir des décisions validées.
+Chaque mois, vers le 15, Nathalie lance **la revue des versements propriétaires**. Les loyers du mois courant sont encaissés (SEPA début de mois, virements en cours de mois), et il est temps de décider, pour chaque propriétaire, du montant à reverser. Les virements partent automatiquement le 20 à partir des décisions validées.
 
 Sur 113 propriétaires :
 - ~85% sont "mécaniques" : loyer encaissé − honoraires = virement. Nathalie les passe en quelques secondes chacun.

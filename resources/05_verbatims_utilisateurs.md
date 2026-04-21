@@ -44,7 +44,7 @@ Extraits d'entretiens menés auprès d'utilisateurs de logiciels de gestion loca
 
 > "Pour moi l'important c'est les chiffres. Je veux savoir : combien on a encaissé ce mois-ci, combien reste à encaisser, quel est le montant total des reversements à faire, et est-ce qu'on a la trésorerie pour."
 
-> "Le 8 de chaque mois, je bloque ma matinée pour préparer la run des reversements. J'ai une centaine de propriétaires à passer en revue avant le 10. Pour 80% c'est mécanique : loyer encaissé − honoraires − virement. Mais pour les 20% restants, il faut ralentir, vérifier, parfois appeler le gestionnaire."
+> "Vers le 15 de chaque mois, je bloque une demi-journée pour préparer la revue des versements. J'ai une centaine de propriétaires à passer en revue avant le 20. Pour 80% c'est mécanique : loyer encaissé − honoraires − virement. Mais pour les 20% restants, il faut ralentir, vérifier, parfois appeler le gestionnaire."
 
 > "Les propriétaires débiteurs, c'est mon problème numéro 1. Quand il y a eu de gros travaux, le propriétaire peut se retrouver avec un solde négatif. Ça veut dire qu'on lui doit rien ce mois-ci, et même qu'il nous doit de l'argent. C'est très délicat à communiquer."
 
