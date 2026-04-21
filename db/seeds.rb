@@ -123,7 +123,7 @@ ancien_locataire = Tenant.create!(first_name: 'Marc', last_name: 'Petit',
   email: 'marc.petit@free.fr', phone: '06 99 88 77 66')
 Lease.create!(property: prop_oliviers_3, status: 'terminated',
   lease_type: 'residential_unfurnished', start_date: Date.new(2022, 3, 1),
-  end_date: Date.new(2026, 2, 28), rent_amount_cents: 55_000,
+  end_date: Date.new(2026, 3, 31), rent_amount_cents: 55_000,
   charges_amount_cents: 4_500, deposit_amount_cents: 55_000, balance_cents: 0
 ).tap { |l| LeaseTenant.create!(lease: l, tenant: ancien_locataire, share: 100.0) }
 
@@ -323,7 +323,7 @@ lease_blanc = Lease.create!(property: prop_blanc, status: 'active',
   charges_amount_cents: 12_000, deposit_amount_cents: 110_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_blanc, tenant: julien, share: 50.0)
 LeaseTenant.create!(lease: lease_blanc, tenant: clara, share: 50.0)
-[JAN, FEB, MAR].each do |month|
+[JAN, FEB, MAR, APR].each do |month|
   Payment.create!(lease: lease_blanc, date: month + 2.days, amount_cents: 61_000,
     payment_type: 'rent', payment_method: 'bank_transfer')
   Payment.create!(lease: lease_blanc, date: month + 3.days, amount_cents: 61_000,
@@ -442,26 +442,28 @@ Payment.create!(lease: lease_etienne, date: Date.new(2026, 4, 12),
   amount_cents: -32_000, payment_type: 'regularization', payment_method: 'bank_transfer')
 
 # =============================================================================
-# 13. Sylvie Caron — Bail terminé le 31 mars, DG à restituer ce mois-ci
+# 13. Sylvie Caron — Bail terminé le 10 avril, DG à restituer ce mois-ci
 # Signaux : deposit_to_refund, new_vacancy
 # =============================================================================
 sylvie = Landlord.create!(
   nature: 'physical', first_name: 'Sylvie', last_name: 'Caron',
-  email: 's.caron@laposte.net', phone: '06 77 88 22 33',
-  payment_day: nil, management_fee_rate: nil
+  email: 's.caron@laposte.net', phone: '06 77 88 22 33'
 )
 prop_sylvie = Property.create!(landlord: sylvie, address: '6 rue Victor Hugo',
   unit_number: 'Apt 1', city: 'Villeurbanne', zip_code: '69100', nature: 'apartment',
   area_sqm: 48.0, rooms_count: 2)
-# Ancien bail terminé fin mars
+# Ancien bail terminé le 10 avril (tout récent)
 sortant = Tenant.create!(first_name: 'Hélène', last_name: 'Marty',
   email: 'h.marty@free.fr', phone: '06 44 99 22 88')
 lease_sylvie_old = Lease.create!(property: prop_sylvie, status: 'terminated',
   lease_type: 'residential_unfurnished', start_date: Date.new(2022, 4, 1),
-  end_date: Date.new(2026, 3, 31), rent_amount_cents: 60_000,
+  end_date: Date.new(2026, 4, 10), rent_amount_cents: 60_000,
   charges_amount_cents: 5_000, deposit_amount_cents: 60_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_sylvie_old, tenant: sortant, share: 100.0)
-pay_monthly(lease_sylvie_old, months: [JAN, FEB, MAR, APR])
+pay_monthly(lease_sylvie_old, months: [JAN, FEB, MAR])
+# Paiement avril proratisé (10 jours) avant la fin du bail
+Payment.create!(lease: lease_sylvie_old, date: Date.new(2026, 4, 3),
+  amount_cents: 21_670, payment_type: 'rent', payment_method: 'bank_transfer')
 # DG à restituer : enregistré comme un "paiement" de type deposit négatif (sortie de trésorerie)
 # Note : la convention seeds est que le DG restitué apparaîtra en déduction côté PayoutRun
 
@@ -486,8 +488,8 @@ lease_horizon = Lease.create!(property: prop_horizon, status: 'active',
   end_date: Date.new(2027, 8, 31), rent_amount_cents: 82_000,
   charges_amount_cents: 7_500, deposit_amount_cents: 82_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_horizon, tenant: mathieu, share: 100.0)
-# Mandat démarre le 1er avril : seul le paiement de mars (arrivé fin mars sur le compte agence) est géré
-Payment.create!(lease: lease_horizon, date: Date.new(2026, 3, 28),
+# Mandat démarre le 28 mars : premier versement à faire en avril
+Payment.create!(lease: lease_horizon, date: Date.new(2026, 4, 6),
   amount_cents: 89_500, payment_type: 'rent', payment_method: 'bank_transfer')
 
 # =============================================================================
@@ -535,19 +537,19 @@ prop_aurelie = Property.create!(landlord: aurelie, address: '14 rue des Capucins
 leo = Tenant.create!(first_name: 'Léo', last_name: 'Fabre',
   email: 'l.fabre@gmail.com', phone: '06 22 88 11 44')
 lease_aurelie = Lease.create!(property: prop_aurelie, status: 'active',
-  lease_type: 'residential_furnished', start_date: Date.new(2026, 3, 20),
-  end_date: Date.new(2027, 3, 19), rent_amount_cents: 68_000,
+  lease_type: 'residential_furnished', start_date: Date.new(2026, 4, 5),
+  end_date: Date.new(2027, 4, 4), rent_amount_cents: 68_000,
   charges_amount_cents: 5_000, deposit_amount_cents: 136_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_aurelie, tenant: leo, share: 100.0)
-# Entrée : DG + prorata de mars
-Payment.create!(lease: lease_aurelie, date: Date.new(2026, 3, 20),
+# Entrée : DG + prorata d'avril (26 jours / 30)
+Payment.create!(lease: lease_aurelie, date: Date.new(2026, 4, 5),
   amount_cents: 136_000, payment_type: 'deposit', payment_method: 'bank_transfer')
-Payment.create!(lease: lease_aurelie, date: Date.new(2026, 3, 20),
-  amount_cents: 31_400, payment_type: 'rent', payment_method: 'bank_transfer')
+Payment.create!(lease: lease_aurelie, date: Date.new(2026, 4, 5),
+  amount_cents: 63_270, payment_type: 'rent', payment_method: 'bank_transfer')
 
 # =============================================================================
-# 17. Vincent Aubert — Bail upcoming, DG déjà encaissé en mars
-# Bail signé démarre le 1er mai. DG arrivé en mars → encaissement sans loyer récurrent.
+# 17. Vincent Aubert — Bail upcoming, DG déjà encaissé en avril
+# Bail signé démarre le 1er juin. DG arrivé en avril → encaissement sans loyer récurrent.
 # Signal : upcoming_lease, deposit_received
 # =============================================================================
 vincent = Landlord.create!(
@@ -561,11 +563,11 @@ prop_vincent = Property.create!(landlord: vincent, address: '28 rue de Bonnel',
 lea_nguyen = Tenant.create!(first_name: 'Léa', last_name: 'Nguyen',
   email: 'l.nguyen@gmail.com', phone: '06 99 88 00 11')
 lease_vincent = Lease.create!(property: prop_vincent, status: 'upcoming',
-  lease_type: 'residential_unfurnished', start_date: Date.new(2026, 5, 1),
-  end_date: Date.new(2029, 4, 30), rent_amount_cents: 72_000,
+  lease_type: 'residential_unfurnished', start_date: Date.new(2026, 6, 1),
+  end_date: Date.new(2029, 5, 31), rent_amount_cents: 72_000,
   charges_amount_cents: 6_000, deposit_amount_cents: 72_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_vincent, tenant: lea_nguyen, share: 100.0)
-Payment.create!(lease: lease_vincent, date: Date.new(2026, 3, 25),
+Payment.create!(lease: lease_vincent, date: Date.new(2026, 4, 12),
   amount_cents: 72_000, payment_type: 'deposit', payment_method: 'bank_transfer')
 
 # =============================================================================
