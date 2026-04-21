@@ -79,7 +79,7 @@ lease_marie = Lease.create!(
   deposit_amount_cents: 85_000, balance_cents: 0
 )
 LeaseTenant.create!(lease: lease_marie, tenant: jean_martin, share: 100.0)
-pay_monthly(lease_marie, months: [JAN, FEB, MAR])
+pay_monthly(lease_marie, months: [JAN, FEB, MAR, APR])
 
 # =============================================================================
 # 2. SCI Les Oliviers — Multi-biens, lot vacant, mix résidentiel/commercial
@@ -108,7 +108,7 @@ lease_oliviers_1 = Lease.create!(property: prop_oliviers_1, status: 'active',
   end_date: Date.new(2026, 5, 31), rent_amount_cents: 75_000,
   charges_amount_cents: 6_000, deposit_amount_cents: 75_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_oliviers_1, tenant: sophie_durand, share: 100.0)
-pay_monthly(lease_oliviers_1, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_oliviers_1, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 
 boulangerie = Tenant.create!(first_name: 'Jacques', last_name: 'Martin',
   email: 'contact@boulangerie-martin.fr', phone: '04 78 00 11 22')
@@ -117,7 +117,7 @@ lease_oliviers_2 = Lease.create!(property: prop_oliviers_2, status: 'active',
   end_date: Date.new(2031, 12, 31), rent_amount_cents: 180_000,
   charges_amount_cents: 20_000, deposit_amount_cents: 360_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_oliviers_2, tenant: boulangerie, share: 100.0)
-pay_monthly(lease_oliviers_2, months: [JAN, FEB, MAR])
+pay_monthly(lease_oliviers_2, months: [JAN, FEB, MAR, APR])
 
 ancien_locataire = Tenant.create!(first_name: 'Marc', last_name: 'Petit',
   email: 'marc.petit@free.fr', phone: '06 99 88 77 66')
@@ -151,14 +151,14 @@ lease_lucas_1 = Lease.create!(property: prop_lucas_1, status: 'active',
   end_date: Date.new(2027, 1, 14), rent_amount_cents: 68_000,
   charges_amount_cents: 5_500, deposit_amount_cents: 68_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_lucas_1, tenant: pierre_leroy, share: 100.0)
-pay_monthly(lease_lucas_1, months: [JAN, FEB, MAR])
+pay_monthly(lease_lucas_1, months: [JAN, FEB, MAR, APR])
 
 lease_lucas_2 = Lease.create!(property: prop_lucas_2, status: 'active',
   lease_type: 'residential_furnished', start_date: Date.new(2025, 9, 1),
   end_date: Date.new(2026, 8, 31), rent_amount_cents: 52_000,
   charges_amount_cents: 4_000, deposit_amount_cents: 52_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_lucas_2, tenant: emma_petit, share: 100.0)
-pay_monthly(lease_lucas_2, months: [JAN, FEB, MAR])
+pay_monthly(lease_lucas_2, months: [JAN, FEB, MAR, APR])
 
 # =============================================================================
 # 4. Isabelle Faure — Locataire en impayé depuis 3 mois, CAF paie seule
@@ -186,10 +186,12 @@ Payment.create!(lease: lease_isabelle, date: Date.new(2026, 1, 5),
   amount_cents: 25_000, payment_type: 'rent', payment_method: 'caf')
 Payment.create!(lease: lease_isabelle, date: Date.new(2026, 1, 15),
   amount_cents: 40_000, payment_type: 'rent', payment_method: 'bank_transfer')
-# Février + Mars : CAF seule
+# Février, Mars, Avril : seule la CAF paie (Karim n'a pas complété)
 Payment.create!(lease: lease_isabelle, date: Date.new(2026, 2, 5),
   amount_cents: 25_000, payment_type: 'rent', payment_method: 'caf')
 Payment.create!(lease: lease_isabelle, date: Date.new(2026, 3, 5),
+  amount_cents: 25_000, payment_type: 'rent', payment_method: 'caf')
+Payment.create!(lease: lease_isabelle, date: Date.new(2026, 4, 5),
   amount_cents: 25_000, payment_type: 'rent', payment_method: 'caf')
 
 # =============================================================================
@@ -211,7 +213,7 @@ lease_garnier = Lease.create!(property: prop_garnier, status: 'active',
   end_date: Date.new(2029, 3, 31), rent_amount_cents: 220_000,
   charges_amount_cents: 35_000, deposit_amount_cents: 440_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_garnier, tenant: restaurant, share: 100.0)
-pay_monthly(lease_garnier, months: [JAN, FEB, MAR])
+pay_monthly(lease_garnier, months: [JAN, FEB, MAR, APR])
 
 Invoice.create!(landlord: garnier, property: prop_garnier,
   supplier_name: 'Artisan Duval SARL',
@@ -248,14 +250,14 @@ lease_marais_1 = Lease.create!(property: prop_marais_1, status: 'active',
   end_date: Date.new(2027, 2, 28), rent_amount_cents: 98_000,
   charges_amount_cents: 8_500, deposit_amount_cents: 98_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_marais_1, tenant: amina, share: 100.0)
-pay_monthly(lease_marais_1, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_marais_1, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 
 lease_marais_2 = Lease.create!(property: prop_marais_2, status: 'active',
   lease_type: 'residential_unfurnished', start_date: Date.new(2024, 7, 1),
   end_date: Date.new(2027, 6, 30), rent_amount_cents: 115_000,
   charges_amount_cents: 9_500, deposit_amount_cents: 115_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_marais_2, tenant: thomas_l, share: 100.0)
-pay_monthly(lease_marais_2, months: [JAN, FEB, MAR])
+pay_monthly(lease_marais_2, months: [JAN, FEB, MAR, APR])
 
 Invoice.create!(landlord: marais, property: nil,
   supplier_name: 'BTP Rénovation Paris',
@@ -290,7 +292,7 @@ lease_leroy = Lease.create!(property: prop_leroy, status: 'active',
   end_date: Date.new(2026, 4, 24), rent_amount_cents: 72_000,
   charges_amount_cents: 6_000, deposit_amount_cents: 72_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_leroy, tenant: fatou, share: 100.0)
-pay_monthly(lease_leroy, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_leroy, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 
 Invoice.create!(landlord: jm_leroy, property: prop_leroy,
   supplier_name: 'Plomberie Leroy',
@@ -334,7 +336,7 @@ Invoice.create!(landlord: catherine, property: prop_blanc,
 
 # =============================================================================
 # 9. Laurent Petit — Multi-échéances (piège faux impayé)
-# Locataire a payé 2 mois d'un coup en février. Mars = 0 encaissé mais OK.
+# Locataire a payé 2 mois d'un coup en mars. Avril = 0 encaissé mais OK.
 # Signaux : rent_partial (à tort si mal lu), multi_installment
 # Risque : bloquer à tort en pensant que le locataire n'a pas payé mars
 # =============================================================================
@@ -353,16 +355,18 @@ lease_laurent = Lease.create!(property: prop_laurent, status: 'active',
   end_date: Date.new(2027, 3, 31), rent_amount_cents: 78_000,
   charges_amount_cents: 7_000, deposit_amount_cents: 78_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_laurent, tenant: valentin, share: 100.0)
-# Janvier : normal
+# Janvier, Février : normal
 Payment.create!(lease: lease_laurent, date: Date.new(2026, 1, 6), amount_cents: 85_000,
   payment_type: 'rent', payment_method: 'bank_transfer')
-# Février : paie 2 mois d'un coup (février + mars anticipé)
-Payment.create!(lease: lease_laurent, date: Date.new(2026, 2, 4), amount_cents: 170_000,
+Payment.create!(lease: lease_laurent, date: Date.new(2026, 2, 5), amount_cents: 85_000,
   payment_type: 'rent', payment_method: 'bank_transfer')
-# Mars : rien (normal)
+# Mars : paie 2 mois d'un coup (mars + avril anticipé)
+Payment.create!(lease: lease_laurent, date: Date.new(2026, 3, 4), amount_cents: 170_000,
+  payment_type: 'rent', payment_method: 'bank_transfer')
+# Avril : rien (normal — déjà payé en mars)
 
 # =============================================================================
-# 10. Bruno Moreau — Paiement partiel mars (60%)
+# 10. Bruno Moreau — Paiement partiel avril (60%)
 # Signaux : rent_partial
 # =============================================================================
 bruno = Landlord.create!(
@@ -380,15 +384,15 @@ lease_bruno = Lease.create!(property: prop_bruno, status: 'active',
   end_date: Date.new(2028, 5, 31), rent_amount_cents: 62_000,
   charges_amount_cents: 5_000, deposit_amount_cents: 62_000, balance_cents: -26_800)
 LeaseTenant.create!(lease: lease_bruno, tenant: celine, share: 100.0)
-pay_monthly(lease_bruno, months: [JAN, FEB])
-# Mars : 60% seulement
-Payment.create!(lease: lease_bruno, date: Date.new(2026, 3, 8),
+pay_monthly(lease_bruno, months: [JAN, FEB, MAR])
+# Avril : 60% seulement
+Payment.create!(lease: lease_bruno, date: Date.new(2026, 4, 8),
   amount_cents: 40_200, payment_type: 'rent', payment_method: 'bank_transfer')
 
 # =============================================================================
-# 11. Maxime Berger — Rejet SEPA sur le loyer de mars
-# Modélisation : paiement SEPA positif + contrepartie négative datée 5 avril.
-# Signal : sepa_rejected (ne pas verser le montant "encaissé" rejeté)
+# 11. Maxime Berger — Rejet SEPA sur le loyer d'avril
+# Modélisation : paiement SEPA positif + contrepartie négative, les deux dans avril.
+# La somme des paiements SEPA du mois = 0, l'encaissement est en réalité nul.
 # =============================================================================
 maxime = Landlord.create!(
   nature: 'physical', first_name: 'Maxime', last_name: 'Berger',
@@ -405,11 +409,11 @@ lease_maxime = Lease.create!(property: prop_maxime, status: 'active',
   end_date: Date.new(2027, 9, 30), rent_amount_cents: 70_000,
   charges_amount_cents: 6_500, deposit_amount_cents: 70_000, balance_cents: -76_500)
 LeaseTenant.create!(lease: lease_maxime, tenant: nadia, share: 100.0)
-pay_monthly(lease_maxime, months: [JAN, FEB], method: 'sepa_debit')
-# Mars : SEPA tenté puis rejeté
-Payment.create!(lease: lease_maxime, date: Date.new(2026, 3, 5),
-  amount_cents: 76_500, payment_type: 'rent', payment_method: 'sepa_debit')
+pay_monthly(lease_maxime, months: [JAN, FEB, MAR], method: 'sepa_debit')
+# Avril : SEPA prélevé le 5, rejet le 10 (la contrepartie annule l'encaissement)
 Payment.create!(lease: lease_maxime, date: Date.new(2026, 4, 5),
+  amount_cents: 76_500, payment_type: 'rent', payment_method: 'sepa_debit')
+Payment.create!(lease: lease_maxime, date: Date.new(2026, 4, 10),
   amount_cents: -76_500, payment_type: 'rent', payment_method: 'sepa_debit')
 
 # =============================================================================
@@ -432,9 +436,9 @@ lease_etienne = Lease.create!(property: prop_etienne, status: 'active',
   end_date: Date.new(2028, 8, 31), rent_amount_cents: 68_000,
   charges_amount_cents: 7_500, deposit_amount_cents: 68_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_etienne, tenant: alain, share: 100.0)
-pay_monthly(lease_etienne, months: [JAN, FEB, MAR])
+pay_monthly(lease_etienne, months: [JAN, FEB, MAR, APR])
 # Régularisation : locataire a trop payé en provisions 2025 → remboursement de 32 000 centimes
-Payment.create!(lease: lease_etienne, date: Date.new(2026, 3, 20),
+Payment.create!(lease: lease_etienne, date: Date.new(2026, 4, 12),
   amount_cents: -32_000, payment_type: 'regularization', payment_method: 'bank_transfer')
 
 # =============================================================================
@@ -457,7 +461,7 @@ lease_sylvie_old = Lease.create!(property: prop_sylvie, status: 'terminated',
   end_date: Date.new(2026, 3, 31), rent_amount_cents: 60_000,
   charges_amount_cents: 5_000, deposit_amount_cents: 60_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_sylvie_old, tenant: sortant, share: 100.0)
-pay_monthly(lease_sylvie_old, months: [JAN, FEB, MAR])
+pay_monthly(lease_sylvie_old, months: [JAN, FEB, MAR, APR])
 # DG à restituer : enregistré comme un "paiement" de type deposit négatif (sortie de trésorerie)
 # Note : la convention seeds est que le DG restitué apparaîtra en déduction côté PayoutRun
 
@@ -487,9 +491,9 @@ Payment.create!(lease: lease_horizon, date: Date.new(2026, 3, 28),
   amount_cents: 89_500, payment_type: 'rent', payment_method: 'bank_transfer')
 
 # =============================================================================
-# 15. Jacques Perrin — Déficit reporté de février (propriétaire débiteur résorbé)
-# Février : grosse facture payée + petit loyer encaissé → solde négatif reporté.
-# Ce mois-ci le loyer doit résorber le déficit avant tout versement.
+# 15. Jacques Perrin — Déficit reporté de mars (propriétaire débiteur résorbé)
+# Mars : grosse facture payée en plus du loyer courant → solde négatif reporté.
+# En avril, le loyer doit résorber le déficit avant tout versement.
 # Signal : debtor_carryover
 # =============================================================================
 jacques = Landlord.create!(
@@ -507,16 +511,16 @@ lease_jacques = Lease.create!(property: prop_jacques, status: 'active',
   end_date: Date.new(2026, 4, 30), rent_amount_cents: 64_000,
   charges_amount_cents: 5_500, deposit_amount_cents: 64_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_jacques, tenant: oriane, share: 100.0)
-pay_monthly(lease_jacques, months: [JAN, FEB, MAR])
-# Grosse facture de février déjà payée → carryover négatif
+pay_monthly(lease_jacques, months: [JAN, FEB, MAR, APR])
+# Grosse facture de mars déjà payée → carryover négatif à résorber en avril
 Invoice.create!(landlord: jacques, property: prop_jacques,
   supplier_name: 'Toitures Beaujolais',
   description: 'Reprise d\'étanchéité toiture',
-  amount_cents: 115_000, status: 'paid', due_date: Date.new(2026, 2, 10),
-  paid_date: Date.new(2026, 2, 18))
+  amount_cents: 115_000, status: 'paid', due_date: Date.new(2026, 3, 10),
+  paid_date: Date.new(2026, 3, 18))
 
 # =============================================================================
-# 16. Aurélie Lemoine — Bail vient de démarrer (entrée locataire mi-mars)
+# 16. Aurélie Lemoine — Bail vient de démarrer (entrée locataire début avril)
 # Premier loyer + DG encaissés → encaissement plus gros que d'habitude.
 # Signaux : new_lease, unusual_inflow
 # =============================================================================
@@ -584,7 +588,7 @@ lease_nadege = Lease.create!(property: prop_nadege, status: 'active',
   end_date: Date.new(2027, 4, 30), rent_amount_cents: 88_000,
   charges_amount_cents: 7_000, deposit_amount_cents: 88_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_nadege, tenant: samir, share: 100.0)
-pay_monthly(lease_nadege, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_nadege, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 Invoice.create!(landlord: nadege, property: prop_nadege,
   supplier_name: 'GLI — Assurance Loyers Impayés',
   description: 'Prime GLI mars 2026 (2.5% annuel)',
@@ -614,7 +618,7 @@ tournesol = Landlord.create!(
     charges_amount_cents: [5_000, 6_000, 7_500, 8_500][i],
     deposit_amount_cents: [62_000, 70_000, 82_000, 92_000][i], balance_cents: 0)
   LeaseTenant.create!(lease: lease, tenant: tenant, share: 100.0)
-  pay_monthly(lease, months: [JAN, FEB, MAR], method: i.even? ? 'sepa_debit' : 'bank_transfer')
+  pay_monthly(lease, months: [JAN, FEB, MAR, APR], method: i.even? ? 'sepa_debit' : 'bank_transfer')
 end
 
 # =============================================================================
@@ -647,19 +651,19 @@ lease_atlas_1 = Lease.create!(property: prop_atlas_1, status: 'active',
   end_date: Date.new(2030, 5, 31), rent_amount_cents: 210_000,
   charges_amount_cents: 28_000, deposit_amount_cents: 420_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_atlas_1, tenant: librairie_tenant, share: 100.0)
-pay_monthly(lease_atlas_1, months: [JAN, FEB, MAR])
+pay_monthly(lease_atlas_1, months: [JAN, FEB, MAR, APR])
 lease_atlas_2 = Lease.create!(property: prop_atlas_2, status: 'active',
   lease_type: 'residential_unfurnished', start_date: Date.new(2023, 10, 1),
   end_date: Date.new(2026, 9, 30), rent_amount_cents: 95_000,
   charges_amount_cents: 8_000, deposit_amount_cents: 95_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_atlas_2, tenant: locres_1, share: 100.0)
-pay_monthly(lease_atlas_2, months: [JAN, FEB, MAR])
+pay_monthly(lease_atlas_2, months: [JAN, FEB, MAR, APR])
 lease_atlas_3 = Lease.create!(property: prop_atlas_3, status: 'active',
   lease_type: 'residential_unfurnished', start_date: Date.new(2025, 1, 1),
   end_date: Date.new(2028, 12, 31), rent_amount_cents: 78_000,
   charges_amount_cents: 6_500, deposit_amount_cents: 78_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_atlas_3, tenant: locres_2, share: 100.0)
-pay_monthly(lease_atlas_3, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_atlas_3, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 
 # =============================================================================
 # 21. Xavier Dumas — Cas simple supplémentaire (volume de run)
@@ -679,7 +683,7 @@ lease_xavier = Lease.create!(property: prop_xavier, status: 'active',
   end_date: Date.new(2027, 6, 30), rent_amount_cents: 74_000,
   charges_amount_cents: 6_000, deposit_amount_cents: 74_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_xavier, tenant: manon, share: 100.0)
-pay_monthly(lease_xavier, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_xavier, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 
 # =============================================================================
 # 22. Clémence Richard — Cas simple supplémentaire
@@ -699,7 +703,7 @@ lease_clemence = Lease.create!(property: prop_clemence, status: 'active',
   end_date: Date.new(2026, 9, 30), rent_amount_cents: 66_000,
   charges_amount_cents: 5_500, deposit_amount_cents: 132_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_clemence, tenant: damien, share: 100.0)
-pay_monthly(lease_clemence, months: [JAN, FEB, MAR])
+pay_monthly(lease_clemence, months: [JAN, FEB, MAR, APR])
 
 # =============================================================================
 # 23. Rachid Ziani — Cas simple supplémentaire
@@ -719,7 +723,7 @@ lease_rachid = Lease.create!(property: prop_rachid, status: 'active',
   end_date: Date.new(2026, 2, 28), rent_amount_cents: 79_000,
   charges_amount_cents: 6_500, deposit_amount_cents: 79_000, balance_cents: 0)
 LeaseTenant.create!(lease: lease_rachid, tenant: sarah, share: 100.0)
-pay_monthly(lease_rachid, months: [JAN, FEB, MAR], method: 'sepa_debit')
+pay_monthly(lease_rachid, months: [JAN, FEB, MAR, APR], method: 'sepa_debit')
 # Note : le bail est renouvelé tacitement (end_date dépassé mais status active)
 
 # =============================================================================
@@ -789,7 +793,7 @@ def seed_normal_property(landlord, i)
   )
   LeaseTenant.create!(lease: lease, tenant: tenant, share: 100.0)
   method = ['bank_transfer', 'bank_transfer', 'sepa_debit'].sample
-  pay_monthly(lease, months: [JAN, FEB, MAR], method: method)
+  pay_monthly(lease, months: [JAN, FEB, MAR, APR], method: method)
   property
 end
 

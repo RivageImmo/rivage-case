@@ -2,8 +2,8 @@
 
 module Api
   class LandlordsController < BaseController
-    COLLECTION_MONTH = Date.new(2026, 3, 1)
-    REFERENCE_DATE = Date.new(2026, 4, 8)
+    COLLECTION_MONTH = Date.new(2026, 4, 1)
+    REFERENCE_DATE = Date.new(2026, 4, 15)
 
     def index
       landlords = Landlord.includes(
@@ -88,9 +88,6 @@ module Api
         payments_collection_month: lease.payments.select do |p|
           p.date >= COLLECTION_MONTH.beginning_of_month &&
             p.date <= COLLECTION_MONTH.end_of_month
-        end.map { |p| payment_json(p) },
-        payments_post_month: lease.payments.select do |p|
-          p.date > COLLECTION_MONTH.end_of_month && p.date <= REFERENCE_DATE
         end.map { |p| payment_json(p) }
       }
     end
