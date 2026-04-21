@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_01_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_02_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,6 +73,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_000000) do
     t.index ["status"], name: "index_leases_on_status"
   end
 
+  create_table "mandates", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "ended_at"
+    t.bigint "landlord_id", null: false
+    t.decimal "management_fee_rate", precision: 5, scale: 2
+    t.integer "payment_day"
+    t.string "reference", null: false
+    t.date "signed_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["landlord_id"], name: "index_mandates_on_landlord_id"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.integer "amount_cents", null: false
     t.datetime "created_at", null: false
@@ -91,12 +103,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_000000) do
     t.string "city", null: false
     t.datetime "created_at", null: false
     t.bigint "landlord_id", null: false
+    t.bigint "mandate_id"
     t.string "nature", null: false
     t.integer "rooms_count"
     t.string "unit_number"
     t.datetime "updated_at", null: false
     t.string "zip_code", null: false
     t.index ["landlord_id"], name: "index_properties_on_landlord_id"
+    t.index ["mandate_id"], name: "index_properties_on_mandate_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -114,6 +128,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_000000) do
   add_foreign_key "lease_tenants", "leases"
   add_foreign_key "lease_tenants", "tenants"
   add_foreign_key "leases", "properties"
+  add_foreign_key "mandates", "landlords"
   add_foreign_key "payments", "leases"
   add_foreign_key "properties", "landlords"
+  add_foreign_key "properties", "mandates"
 end

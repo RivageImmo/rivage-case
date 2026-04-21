@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Landlord < ApplicationRecord
+  has_many :mandates, dependent: :destroy
   has_many :properties, dependent: :destroy
   has_many :leases, through: :properties
   has_many :invoices, dependent: :destroy

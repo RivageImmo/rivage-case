@@ -16,10 +16,24 @@ L'application contient les modèles suivants. Les endpoints API retournent ces d
 | siret | string | Numéro SIRET (si nature = company) |
 | email | string | Adresse email |
 | phone | string | Téléphone |
-| payment_day | integer (nullable) | Jour de versement préféré (null = défaut agence : le 10) |
-| management_fee_rate | decimal (nullable) | Taux d'honoraires négocié (null = défaut agence : 7%) |
-| payment_enabled | boolean | Versement actif ou désactivé |
+| payment_enabled | boolean | Versement actif ou désactivé (drapeau global au propriétaire) |
 | payment_disabled_reason | string (nullable) | Motif de désactivation du versement |
+| payment_day | integer (nullable) | **Déprécié** — utilise `mandate.payment_day` |
+| management_fee_rate | decimal (nullable) | **Déprécié** — utilise `mandate.management_fee_rate` |
+
+## Mandate (Mandat de gestion)
+
+Un propriétaire signe un ou plusieurs mandats de gestion avec l'agence. Chaque mandat porte ses propres conditions commerciales (taux d'honoraires, jour de versement). Les biens sont rattachés à un mandat spécifique.
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| id | integer | Identifiant unique |
+| landlord_id | integer | Propriétaire du mandat |
+| reference | string | Référence interne (ex : `MAND-2024-001`) |
+| management_fee_rate | decimal (nullable) | Taux d'honoraires du mandat (null = défaut agence : 7%) |
+| payment_day | integer (nullable) | Jour de versement du mandat (null = défaut agence : le 10) |
+| signed_at | date | Date de signature |
+| ended_at | date (nullable) | Date de résiliation si applicable |
 
 ## Property (Bien / Lot)
 
@@ -27,6 +41,7 @@ L'application contient les modèles suivants. Les endpoints API retournent ces d
 |-------|------|-------------|
 | id | integer | Identifiant unique |
 | landlord_id | integer | Propriétaire du bien |
+| mandate_id | integer (nullable) | Mandat de gestion qui régit ce bien (taux d'honoraires, jour de versement) |
 | address | string | Adresse |
 | unit_number | string (nullable) | Numéro d'appartement ou de lot |
 | city | string | Ville |
@@ -93,7 +108,7 @@ Un bail est lié à ses locataires via la table `lease_tenants` (pour gérer la 
 ## Endpoints API
 
 ```
-GET /api/payout-runs/current  — Run des versements propriétaires prête à passer en revue (endpoint principal du sujet)
+GET /api/payouts              — Briques brutes pour la revue mensuelle des versements propriétaires (endpoint principal du sujet)
 GET /api/stats                — KPIs globaux
 GET /api/landlords            — Liste des propriétaires (avec stats agrégées)
 GET /api/landlords/:id        — Détail d'un propriétaire (biens, baux, paiements, factures)
@@ -103,7 +118,7 @@ GET /api/properties           — Liste des biens
 GET /api/invoices             — Liste des factures
 ```
 
-Le détail du payload `/api/payout-runs/current` (propositions de versement, signaux, breakdown, actions) est documenté dans `SUJET.md` section 6.
+Le détail du payload `/api/payouts` (mandats, propriétés, baux, paiements collectés, paiements post-mois, factures, DG à restituer) est documenté dans `SUJET.md` section 6. **Ce payload ne contient aucun calcul préfait** — le candidat doit construire lui-même le net à verser, la détection des signaux et la classification.
 
 Tous les montants sont en **centimes** (ex : 85000 = 850,00 EUR).
 
@@ -160,7 +175,7 @@ L'API retourne plusieurs champs calculés qui ne sont pas directement stockés e
 
 ### GET /api/landlords — Liste des propriétaires
 
-Retourne un tableau JSON. Chaque élément contient les données du propriétaire avec des statistiques agrégées. Voici les 2 premiers éléments (sur 8 au total) :
+Retourne un tableau JSON. Chaque élément contient les données du propriétaire avec des statistiques agrégées. Voici 2 éléments représentatifs (sur 103 au total) :
 
 ```json
 [
@@ -302,19 +317,19 @@ Retourne un objet unique avec les indicateurs clés de performance de l'agence.
 
 ```json
 {
-  "landlords_count": 8,
-  "properties_count": 12,
-  "active_leases_count": 11,
-  "vacant_properties_count": 1,
-  "occupancy_rate": 91.7,
-  "total_monthly_rent_cents": 1180000,
-  "total_monthly_charges_cents": 124500,
-  "total_balance_cents": -230000,
-  "unpaid_leases_count": 1,
-  "total_unpaid_cents": 230000,
-  "expiring_leases_count": 1,
-  "pending_invoices_count": 4,
-  "pending_invoices_total_cents": 3430000,
+  "landlords_count": 103,
+  "properties_count": 112,
+  "active_leases_count": 109,
+  "vacant_properties_count": 3,
+  "occupancy_rate": 97.3,
+  "total_monthly_rent_cents": 8102000,
+  "total_monthly_charges_cents": 700000,
+  "total_balance_cents": -333300,
+  "unpaid_leases_count": 3,
+  "total_unpaid_cents": 333300,
+  "expiring_leases_count": 3,
+  "pending_invoices_count": 5,
+  "pending_invoices_total_cents": 3208500,
   "disabled_payments_count": 1
 }
 ```

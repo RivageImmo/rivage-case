@@ -2,6 +2,7 @@
 
 class Property < ApplicationRecord
   belongs_to :landlord
+  belongs_to :mandate, optional: true
   has_many :leases, dependent: :destroy
   has_many :invoices, dependent: :destroy
 

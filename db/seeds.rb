@@ -755,6 +755,44 @@ STREETS = ['rue de la République', 'avenue Jean Jaurès', 'rue Victor Hugo',
 
 srand(42) # reproductibilité des seeds de volume
 
+def seed_normal_property(landlord, i)
+  city, zip = CITIES.sample
+  street = STREETS.sample
+  rent = [48_000, 55_000, 62_000, 68_000, 72_000, 78_000, 85_000, 92_000, 105_000].sample
+  charges = (rent * 0.08).to_i
+  deposit = rent
+  lease_type = ['residential_unfurnished', 'residential_unfurnished', 'residential_unfurnished',
+                'residential_furnished'].sample
+  start_date = Date.new([2022, 2023, 2023, 2024].sample, [1, 3, 6, 9].sample, [1, 15].sample)
+  end_date = Date.new(2027 + rand(3), [4, 7, 10].sample, [14, 28].sample)
+  area = [32.0, 38.0, 45.0, 52.0, 58.0, 65.0, 72.0, 80.0, 90.0].sample
+  rooms = [1, 2, 2, 3, 3, 4].sample
+
+  property = Property.create!(
+    landlord: landlord,
+    address: "#{rand(1..180)} #{street}",
+    unit_number: rand(10) < 7 ? "Apt #{rand(1..15)}" : nil,
+    city: city, zip_code: zip, nature: 'apartment',
+    area_sqm: area, rooms_count: rooms
+  )
+  tenant = Tenant.create!(
+    first_name: [FIRST_NAMES_M, FIRST_NAMES_F].sample[(i * 7) % 24],
+    last_name: LAST_NAMES[(i * 5) % LAST_NAMES.size],
+    email: "locataire#{i + 100}#{rand(1000)}@email.com",
+    phone: "06 #{rand(10..99)} #{rand(10..99)} #{rand(10..99)} #{rand(10..99)}"
+  )
+  lease = Lease.create!(
+    property: property, status: 'active', lease_type: lease_type,
+    start_date: start_date, end_date: end_date,
+    rent_amount_cents: rent, charges_amount_cents: charges,
+    deposit_amount_cents: deposit, balance_cents: 0
+  )
+  LeaseTenant.create!(lease: lease, tenant: tenant, share: 100.0)
+  method = ['bank_transfer', 'bank_transfer', 'sepa_debit'].sample
+  pay_monthly(lease, months: [JAN, FEB, MAR], method: method)
+  property
+end
+
 80.times do |i|
   fn = [FIRST_NAMES_M, FIRST_NAMES_F].sample
   first = fn[i % fn.size]
@@ -770,55 +808,83 @@ srand(42) # reproductibilité des seeds de volume
     payment_day: [nil, nil, nil, 5, 10, 15, 20].sample,
     management_fee_rate: [nil, nil, 6.0, 6.5, 7.0, 7.5, 8.0].sample
   )
-
-  city, zip = CITIES.sample
-  street = STREETS.sample
-  rent = [48_000, 55_000, 62_000, 68_000, 72_000, 78_000, 85_000, 92_000, 105_000].sample
-  charges = (rent * 0.08).to_i
-  deposit = rent
-  lease_type = ['residential_unfurnished', 'residential_unfurnished', 'residential_unfurnished',
-                'residential_furnished'].sample
-  # Start "ancien" pour éviter le signal new_lease sur les cas normaux.
-  start_date = Date.new([2022, 2023, 2023, 2024].sample, [1, 3, 6, 9].sample, [1, 15].sample)
-  # End "loin" pour éviter le signal expiring_lease.
-  end_date = Date.new(2027 + rand(3), [4, 7, 10].sample, [14, 28].sample)
-  area = [32.0, 38.0, 45.0, 52.0, 58.0, 65.0, 72.0, 80.0, 90.0].sample
-  rooms = [1, 2, 2, 3, 3, 4].sample
-
-  property = Property.create!(
-    landlord: landlord,
-    address: "#{rand(1..180)} #{street}",
-    unit_number: rand(10) < 7 ? "Apt #{rand(1..15)}" : nil,
-    city: city, zip_code: zip, nature: 'apartment',
-    area_sqm: area, rooms_count: rooms
-  )
-
-  tenant = Tenant.create!(
-    first_name: [FIRST_NAMES_M, FIRST_NAMES_F].sample[(i * 7) % 24],
-    last_name: LAST_NAMES[(i * 5) % LAST_NAMES.size],
-    email: "locataire#{i + 100}@email.com",
-    phone: "06 #{rand(10..99)} #{rand(10..99)} #{rand(10..99)} #{rand(10..99)}"
-  )
-  lease = Lease.create!(
-    property: property, status: 'active', lease_type: lease_type,
-    start_date: start_date, end_date: end_date,
-    rent_amount_cents: rent, charges_amount_cents: charges,
-    deposit_amount_cents: deposit, balance_cents: 0
-  )
-  LeaseTenant.create!(lease: lease, tenant: tenant, share: 100.0)
-  method = ['bank_transfer', 'bank_transfer', 'sepa_debit'].sample
-  pay_monthly(lease, months: [JAN, FEB, MAR], method: method)
+  seed_normal_property(landlord, i)
 end
 
 # =============================================================================
-# Normalisation des dates d'onboarding des mandats
-# Tous les propriétaires ont un mandat "ancien" sauf SCI Horizon qui est neuf.
+# Volume — 10 propriétaires multi-mandats (2 biens, 2 mandats différents)
+# Chaque mandat a son propre taux d'honoraires et jour de versement.
+# Le candidat doit calculer les honoraires par mandat, pas globalement.
 # =============================================================================
+MULTI_MANDATE_CASES = [
+  { first: 'Aline', last: 'Courtin', fees_a: 8.0, fees_b: 5.5, day_a: 10, day_b: 5 },
+  { first: 'Bertrand', last: 'Mallet', fees_a: 7.5, fees_b: 6.0, day_a: nil, day_b: 15 },
+  { first: 'Caroline', last: 'Dardel', fees_a: 7.0, fees_b: 5.0, day_a: 10, day_b: 20 },
+  { first: 'Damien', last: 'Fiquet', fees_a: 8.0, fees_b: 6.5, day_a: 15, day_b: 15 },
+  { first: 'Élodie', last: 'Ganier', fees_a: 7.5, fees_b: 6.0, day_a: nil, day_b: 10 },
+  { first: 'François', last: 'Hilaire', fees_a: 8.0, fees_b: 7.0, day_a: 5, day_b: 20 },
+  { first: 'Géraldine', last: 'Joubert', fees_a: 6.5, fees_b: 5.5, day_a: 10, day_b: 10 },
+  { first: 'Henri', last: 'Kaminski', fees_a: 7.5, fees_b: 5.0, day_a: 15, day_b: 5 },
+  { first: 'Isabelle', last: 'Lenoir', fees_a: 8.0, fees_b: 6.0, day_a: nil, day_b: 15 },
+  { first: 'Jérôme', last: 'Marceau', fees_a: 7.0, fees_b: 5.5, day_a: 20, day_b: 10 }
+].freeze
+
+MULTI_MANDATE_CASES.each_with_index do |config, idx|
+  landlord = Landlord.create!(
+    nature: 'physical', first_name: config[:first], last_name: config[:last],
+    email: "#{config[:first].downcase.tr('éèêàâîïôùç', 'eeaaiioua')}.#{config[:last].downcase}@email.com",
+    phone: "06 #{rand(10..99)} #{rand(10..99)} #{rand(10..99)} #{rand(10..99)}",
+    payment_day: nil,
+    management_fee_rate: nil # lu via les mandats, pas via le landlord
+  )
+
+  mandate_a = Mandate.create!(
+    landlord: landlord, reference: "MAND-#{2021 + (idx % 3)}-#{1000 + idx}A",
+    management_fee_rate: config[:fees_a], payment_day: config[:day_a],
+    signed_at: Date.new(2021 + (idx % 3), [1, 3, 6, 9].sample, 15)
+  )
+  mandate_b = Mandate.create!(
+    landlord: landlord, reference: "MAND-#{2023 + (idx % 2)}-#{2000 + idx}B",
+    management_fee_rate: config[:fees_b], payment_day: config[:day_b],
+    signed_at: Date.new(2023 + (idx % 2), [1, 3, 6, 9].sample, 15)
+  )
+
+  prop_a = seed_normal_property(landlord, 200 + idx)
+  prop_b = seed_normal_property(landlord, 300 + idx)
+  prop_a.update!(mandate: mandate_a)
+  prop_b.update!(mandate: mandate_b)
+end
+
+# =============================================================================
+# Post-traitement
+#  (1) mandat par défaut pour chaque propriétaire qui n'en a pas encore
+#      — il reprend les conditions stockées sur le Landlord
+#  (2) les propriétés sans mandat sont attachées au mandat par défaut
+#  (3) normalisation des dates d'onboarding (SCI Horizon = mandat récent)
+# =============================================================================
+
+Landlord.includes(:mandates, :properties).find_each do |landlord|
+  if landlord.mandates.empty?
+    mandate = Mandate.create!(
+      landlord: landlord,
+      reference: "MAND-#{landlord.id.to_s.rjust(4, '0')}",
+      management_fee_rate: landlord.management_fee_rate,
+      payment_day: landlord.payment_day,
+      signed_at: landlord.created_at.to_date
+    )
+    landlord.properties.where(mandate_id: nil).update_all(mandate_id: mandate.id)
+  else
+    # Propriétés qui seraient restées orphelines : on les attache au mandat le plus ancien
+    default_mandate = landlord.mandates.order(:signed_at).first
+    landlord.properties.where(mandate_id: nil).update_all(mandate_id: default_mandate.id)
+  end
+end
+
 Landlord.where("company_name != 'SCI Horizon' OR company_name IS NULL").update_all(
   created_at: Date.new(2024, 1, 15),
   updated_at: Date.new(2024, 1, 15)
 )
 
-puts "==> Seeded: #{Landlord.count} propriétaires, #{Property.count} biens, " \
-     "#{Tenant.count} locataires, #{Lease.count} baux, " \
+puts "==> Seeded: #{Landlord.count} propriétaires, #{Mandate.count} mandats, " \
+     "#{Property.count} biens, #{Tenant.count} locataires, #{Lease.count} baux, " \
      "#{Payment.count} paiements, #{Invoice.count} factures"

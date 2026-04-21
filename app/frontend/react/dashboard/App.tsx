@@ -18,6 +18,9 @@ import React from 'react';
  *   - useApi<T>(path)    — { data, loading, error } pour appeler les endpoints API
  *
  * Endpoints API disponibles :
+ *   GET /api/payouts         — Donnees brutes pour la revue des versements (endpoint principal)
+ *                              landlords[] avec mandates[], properties[], leases[], invoices[].
+ *                              Pas de calcul prefait — c'est a toi de modeliser.
  *   GET /api/stats           — KPIs globaux (taux d'occupation, impayes, etc.)
  *   GET /api/landlords       — Liste des proprietaires avec stats agregees
  *   GET /api/landlords/:id   — Detail d'un proprietaire (biens, baux, paiements, factures)
