@@ -131,8 +131,8 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
     {
       "id": 114,
       "reference": "MAND-2021-1000A",
-      "management_fee_rate": "8.0",      // string decimal, null = défaut agence (7%)
-      "payment_day": 10,                 // null = défaut agence (10)
+      "management_fee_rate": "8.0",      // string decimal
+      "payment_day": 10,
       "signed_at": "2021-03-15",
       "ended_at": null,                  // null = mandat toujours actif
       "property_ids": [113]
@@ -212,7 +212,7 @@ Le sujet est volontairement large. On ne s'attend pas à ce que tu traites tous 
 ### Ce qu'on attend en restitution
 
 - **Raisonnement produit.** Quel utilisateur tu as ciblé, pourquoi, ce que ton écran l'aide à faire.
-- **Modélisation du calcul.** Comment tu calcules le net — notamment la gestion des mandats multiples.
+- **Un flux clair et précis.** Comment on passe de "j'arrive sur la page" à "j'ai pris mes décisions" — et pourquoi tu as choisi ce flux.
 - **Hiérarchie des signaux.** Ce que tu as choisi de remonter, dans quel ordre, avec quelle prominence — et ce que tu as délibérément masqué.
 - **Démo en direct.** Tu passes la revue devant nous. Sur les cas à risque, on te demandera ta décision et pourquoi.
 - **Limites.** Ce que tu n'as pas fait, ce que tu aurais fait avec plus de temps.
