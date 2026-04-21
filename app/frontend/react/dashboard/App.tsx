@@ -18,16 +18,15 @@ import React from 'react';
  *   - useApi<T>(path)    — { data, loading, error } pour appeler les endpoints API
  *
  * Endpoints API disponibles :
- *   GET /api/payouts         — Donnees brutes pour la revue des versements (endpoint principal)
- *                              landlords[] avec mandates[], properties[], leases[], invoices[].
- *                              Pas de calcul prefait — c'est a toi de modeliser.
- *   GET /api/stats           — KPIs globaux (taux d'occupation, impayes, etc.)
- *   GET /api/landlords       — Liste des proprietaires avec stats agregees
- *   GET /api/landlords/:id   — Detail d'un proprietaire (biens, baux, paiements, factures)
- *   GET /api/leases          — Liste de tous les baux avec statut et balance
- *   GET /api/leases/:id      — Detail d'un bail avec historique de paiements
- *   GET /api/properties      — Liste des biens avec info d'occupation
- *   GET /api/invoices        — Liste des factures fournisseurs
+ *   GET /api/landlords                 — Liste des proprietaires avec leurs mandats, biens,
+ *                                        baux actifs (paiements du mois + post-mois), factures.
+ *                                        Vue principale pour construire la revue des versements.
+ *   GET /api/landlords/:id             — Meme forme pour un proprietaire unique
+ *   GET /api/mandates?landlord_id=X    — Mandats d'un proprietaire
+ *   GET /api/leases / :id              — Liste et detail des baux
+ *   GET /api/properties                — Liste des biens
+ *   GET /api/invoices                  — Liste des factures fournisseurs
+ *   GET /api/stats                     — KPIs globaux (vue macro, informatif)
  *
  * Classes CSS du design system :
  *   Layout:     .page-header, .stats-grid, .stat-card, .card, .alert-banner

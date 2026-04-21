@@ -108,17 +108,23 @@ Un bail est lié à ses locataires via la table `lease_tenants` (pour gérer la 
 ## Endpoints API
 
 ```
-GET /api/payouts              — Briques brutes pour la revue mensuelle des versements propriétaires (endpoint principal du sujet)
-GET /api/stats                — KPIs globaux
-GET /api/landlords            — Liste des propriétaires (avec stats agrégées)
-GET /api/landlords/:id        — Détail d'un propriétaire (biens, baux, paiements, factures)
-GET /api/leases               — Liste des baux
-GET /api/leases/:id           — Détail d'un bail (avec historique de paiements)
-GET /api/properties           — Liste des biens
-GET /api/invoices             — Liste des factures
+GET /api/landlords                 — Liste des propriétaires avec mandats, biens, baux actifs
+                                     (paiements du mois + post-mois), factures. Vue la plus
+                                     complète pour construire la revue mensuelle des versements.
+GET /api/landlords/:id             — Même forme pour un propriétaire unique
+GET /api/mandates?landlord_id=X    — Mandats d'un propriétaire (ou tous)
+GET /api/leases                    — Liste des baux
+GET /api/leases/:id                — Détail d'un bail avec historique complet des paiements
+GET /api/properties                — Liste des biens
+GET /api/invoices                  — Liste des factures fournisseurs
+GET /api/stats                     — KPIs globaux de l'agence (vue macro)
 ```
 
-Le détail du payload `/api/payouts` (mandats, propriétés, baux, paiements collectés, paiements post-mois, factures, DG à restituer) est documenté dans `SUJET.md` section 6. **Ce payload ne contient aucun calcul préfait** — le candidat doit construire lui-même le net à verser, la détection des signaux et la classification.
+Le détail du payload `/api/landlords` (mandats, propriétés, baux, paiements collectés, paiements post-mois, factures) est documenté dans `SUJET.md` section 6. **Aucun calcul n'est préfait** — le candidat doit construire lui-même le net à verser, la détection des signaux et la classification.
+
+**Défauts agence** : si `mandate.management_fee_rate` est `null`, appliquer 7%. Si `mandate.payment_day` est `null`, appliquer le 10.
+
+**Contexte temporel du cas** : on est le **8 avril 2026**. Les virements partent le **10 avril**. Le mois de collecte à analyser est **mars 2026**. Les paiements datés après le 31 mars (ex : rejets SEPA) sont exposés via `payments_post_month` sur chaque bail.
 
 Tous les montants sont en **centimes** (ex : 85000 = 850,00 EUR).
 
@@ -135,12 +141,9 @@ L'API retourne plusieurs champs calculés qui ne sont pas directement stockés e
 | `display_name` | string | Si `nature = company` : retourne `company_name`. Si `nature = physical` : retourne `"first_name last_name"`. |
 | `properties_count` | integer | Nombre total de biens du propriétaire. |
 | `active_leases_count` | integer | Nombre de baux actifs (status = `active`). |
-| `vacant_properties_count` | integer | Nombre de biens sans bail actif (`properties_count - nombre de biens avec un bail actif`). |
-| `total_rent_cents` | integer | Somme des loyers mensuels de tous les baux actifs (en centimes). |
-| `total_charges_cents` | integer | Somme des charges mensuelles de tous les baux actifs (en centimes). |
-| `total_balance_cents` | integer | Somme des soldes de tous les baux actifs (en centimes). Négatif = impayé global. |
-| `pending_invoices_cents` | integer | Somme des montants des factures en statut `pending` (en centimes). |
-| `has_expiring_lease` | boolean | `true` si au moins un bail actif a une `end_date` dans les 30 prochains jours. |
+| `vacant_properties_count` | integer | Nombre de biens sans bail actif. |
+
+**Note** : l'API n'expose pas d'agrégats financiers (somme des loyers, solde, factures pendantes) au niveau `Landlord`. Ces calculs sont à la charge du candidat — il doit les faire lui-même à partir des briques `leases[]`, `invoices[]` et `mandates[]` retournées par `/api/landlords`.
 
 ### Sur Property (via le contrôleur)
 
@@ -186,18 +189,11 @@ Retourne un tableau JSON. Chaque élément contient les données du propriétair
     "company_name": null,
     "email": "marie.dupont@email.com",
     "phone": "06 12 34 56 78",
-    "payment_day": null,
-    "management_fee_rate": null,
     "payment_enabled": true,
     "payment_disabled_reason": null,
     "properties_count": 1,
     "active_leases_count": 1,
-    "vacant_properties_count": 0,
-    "total_rent_cents": 85000,
-    "total_charges_cents": 8000,
-    "total_balance_cents": 0,
-    "pending_invoices_cents": 0,
-    "has_expiring_lease": false
+    "vacant_properties_count": 0
   },
   {
     "id": 10,
@@ -206,18 +202,11 @@ Retourne un tableau JSON. Chaque élément contient les données du propriétair
     "company_name": "SCI Les Oliviers",
     "email": "contact@sci-oliviers.fr",
     "phone": "06 98 76 54 32",
-    "payment_day": 15,
-    "management_fee_rate": "6.5",
     "payment_enabled": true,
     "payment_disabled_reason": null,
     "properties_count": 3,
     "active_leases_count": 2,
-    "vacant_properties_count": 1,
-    "total_rent_cents": 255000,
-    "total_charges_cents": 26000,
-    "total_balance_cents": 0,
-    "pending_invoices_cents": 0,
-    "has_expiring_lease": false
+    "vacant_properties_count": 1
   }
 ]
 ```
@@ -234,18 +223,11 @@ Retourne l'objet propriétaire enrichi avec la liste de ses biens (et leurs baux
   "company_name": null,
   "email": "marie.dupont@email.com",
   "phone": "06 12 34 56 78",
-  "payment_day": null,
-  "management_fee_rate": null,
   "payment_enabled": true,
   "payment_disabled_reason": null,
   "properties_count": 1,
   "active_leases_count": 1,
   "vacant_properties_count": 0,
-  "total_rent_cents": 85000,
-  "total_charges_cents": 8000,
-  "total_balance_cents": 0,
-  "pending_invoices_cents": 0,
-  "has_expiring_lease": false,
   "siret": null,
   "properties": [
     {

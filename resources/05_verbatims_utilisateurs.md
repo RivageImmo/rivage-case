@@ -58,4 +58,6 @@ Extraits d'entretiens menés auprès d'utilisateurs de logiciels de gestion loca
 
 > "Les baux commerciaux c'est un monde à part. Les montants sont plus élevés, les dépôts de garantie aussi, et il y a souvent de la TVA. Je dois pouvoir les distinguer facilement des baux résidentiels."
 
+> "On a quelques propriétaires qui ont plusieurs mandats avec nous, signés à des époques différentes. Chaque mandat a son taux d'honoraires propre — par exemple 8% sur le premier mandat signé il y a 5 ans, 6% sur le second négocié l'an dernier pour les récompenser de nous avoir confié un deuxième bien. Quand je calcule leur versement, je dois appliquer le bon taux à chaque bien, mandat par mandat. Si je fais une moyenne, je me trompe."
+
 > "Mon cauchemar c'est la fin de mois. Je dois avoir rapproché tous les mouvements, préparé tous les reversements, et généré tous les CRG. Si un chiffre est faux, c'est le propriétaire qui appelle pour se plaindre. La fiabilité, c'est non négociable."

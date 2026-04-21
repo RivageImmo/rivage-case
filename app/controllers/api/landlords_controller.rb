@@ -2,15 +2,23 @@
 
 module Api
   class LandlordsController < BaseController
+    COLLECTION_MONTH = Date.new(2026, 3, 1)
+    REFERENCE_DATE = Date.new(2026, 4, 8)
+
     def index
-      landlords = Landlord.includes(properties: { leases: :tenants }).all
+      landlords = Landlord.includes(
+        :mandates,
+        properties: { leases: %i[tenants payments] },
+        invoices: :property
+      ).order(:last_name)
 
       render json: landlords.map { |l| landlord_summary(l) }
     end
 
     def show
       landlord = Landlord.includes(
-        properties: { leases: [:tenants, :payments] },
+        :mandates,
+        properties: { leases: %i[tenants payments] },
         invoices: :property
       ).find(params[:id])
 
@@ -20,53 +28,47 @@ module Api
     private
 
     def landlord_summary(landlord)
-      active_leases = landlord.leases.select(&:active?)
-
       {
         id: landlord.id,
         nature: landlord.nature,
         display_name: landlord.display_name,
         company_name: landlord.company_name,
+        siret: landlord.siret,
         email: landlord.email,
         phone: landlord.phone,
-        payment_day: landlord.payment_day,
-        management_fee_rate: landlord.management_fee_rate,
         payment_enabled: landlord.payment_enabled,
         payment_disabled_reason: landlord.payment_disabled_reason,
-        properties_count: landlord.properties.size,
-        active_leases_count: active_leases.size,
-        vacant_properties_count: landlord.properties.size - active_leases.map(&:property_id).uniq.size,
-        total_rent_cents: active_leases.sum(&:rent_amount_cents),
-        total_charges_cents: active_leases.sum(&:charges_amount_cents),
-        total_balance_cents: active_leases.sum(&:balance_cents),
-        pending_invoices_cents: landlord.invoices.select(&:pending?).sum(&:amount_cents),
-        has_expiring_lease: active_leases.any? { |l| l.end_date.present? && l.end_date <= 30.days.from_now }
+        mandate_started_at: landlord.created_at.to_date,
+        mandates: landlord.mandates.map { |m| mandate_json(m) },
+        properties: landlord.properties.map { |p| property_json(p) },
+        invoices: landlord.invoices.map { |i| invoice_json(i) }
       }
     end
 
     def landlord_detail(landlord)
+      landlord_summary(landlord)
+    end
+
+    def mandate_json(mandate)
       {
-        **landlord_summary(landlord),
-        siret: landlord.siret,
-        properties: landlord.properties.map { |p| property_with_lease(p) },
-        invoices: landlord.invoices.order(due_date: :desc).map { |i| invoice_json(i) }
+        id: mandate.id,
+        reference: mandate.reference,
+        management_fee_rate: mandate.management_fee_rate,
+        payment_day: mandate.payment_day,
+        signed_at: mandate.signed_at,
+        ended_at: mandate.ended_at,
+        property_ids: mandate.properties.map(&:id)
       }
     end
 
-    def property_with_lease(property)
-      active_lease = property.leases.find(&:active?)
+    def property_json(property)
       {
         id: property.id,
-        address: property.address,
-        unit_number: property.unit_number,
         full_address: property.full_address,
         city: property.city,
-        zip_code: property.zip_code,
         nature: property.nature,
-        area_sqm: property.area_sqm,
-        rooms_count: property.rooms_count,
-        vacant: active_lease.nil?,
-        lease: active_lease ? lease_json(active_lease) : nil
+        mandate_id: property.mandate_id,
+        leases: property.leases.map { |l| lease_json(l) }
       }
     end
 
@@ -79,17 +81,22 @@ module Api
         end_date: lease.end_date,
         rent_amount_cents: lease.rent_amount_cents,
         charges_amount_cents: lease.charges_amount_cents,
-        deposit_amount_cents: lease.deposit_amount_cents,
         total_due_cents: lease.total_due_cents,
+        deposit_amount_cents: lease.deposit_amount_cents,
         balance_cents: lease.balance_cents,
-        expires_soon: lease.expires_soon?,
         tenants: lease.tenants.map { |t| tenant_json(t, lease) },
-        recent_payments: lease.payments.order(date: :desc).first(6).map { |p| payment_json(p) }
+        payments_collection_month: lease.payments.select do |p|
+          p.date >= COLLECTION_MONTH.beginning_of_month &&
+            p.date <= COLLECTION_MONTH.end_of_month
+        end.map { |p| payment_json(p) },
+        payments_post_month: lease.payments.select do |p|
+          p.date > COLLECTION_MONTH.end_of_month && p.date <= REFERENCE_DATE
+        end.map { |p| payment_json(p) }
       }
     end
 
     def tenant_json(tenant, lease)
-      lt = lease.lease_tenants.find { |lt| lt.tenant_id == tenant.id }
+      lt = lease.lease_tenants.find { |x| x.tenant_id == tenant.id }
       {
         id: tenant.id,
         display_name: tenant.display_name,
@@ -119,6 +126,7 @@ module Api
         status: invoice.status,
         due_date: invoice.due_date,
         paid_date: invoice.paid_date,
+        property_id: invoice.property_id,
         property_address: invoice.property&.full_address
       }
     end
