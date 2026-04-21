@@ -2,7 +2,7 @@
 
 ## Revue des versements propriétaires
 
-**Durée : 1h à 1h30 (travail) + 30 min (restitution orale)**
+**Durée : 1h à 1h15 (travail) + 30 à 45 min (restitution orale)**
 
 ---
 
@@ -18,7 +18,7 @@ Nos clients sont des agences immobilières (50 à 2 000 lots gérés). Leurs uti
 
 Chaque mois, entre le 5 et le 10, la comptable mandant de l'agence passe en revue les versements propriétaires avant de déclencher les virements. Pour chaque propriétaire, elle peut **valider** le montant à verser, **bloquer** le versement avec un motif, ou **ajuster** (réduire, étaler).
 
-L'agence gère 113 propriétaires. La majorité est en situation standard. Une minorité présente des situations qui demandent arbitrage : impayé, rejet SEPA, facture de travaux importante, versement désactivé, bail qui se termine, propriétaire débiteur, plusieurs mandats avec des taux différents.
+L'agence gère 113 propriétaires. La majorité est en situation standard (loyer encaissé, honoraires déduits, virement). Une minorité présente des situations qui demandent arbitrage : impayé, paiement partiel, rejet SEPA, facture de travaux importante, versement désactivé, bail qui se termine, dépôt de garantie à restituer, propriétaire avec plusieurs mandats aux taux différents.
 
 L'enjeu : aller vite sur les cas simples, prendre le temps sur les cas à risque, ne pas rater les pièges.
 
@@ -26,26 +26,40 @@ L'enjeu : aller vite sur les cas simples, prendre le temps sur les cas à risque
 
 ## 3. Le cycle financier — ce que tu dois savoir
 
-**Chaque mois**, pour chaque propriétaire, l'agence calcule le montant à reverser :
+### Formule de reversement
+
+Chaque mois, pour chaque propriétaire, l'agence calcule le montant à reverser :
 
 ```
-Reversement = Loyers encaissés
-            − Honoraires de gestion (5% à 10% HT, par mandat)
-            − Factures fournisseurs (travaux, plomberie, syndic) à déduire ce mois
+Reversement = Loyers encaissés ce mois-ci
+            − Honoraires de gestion (5% à 10% HT, calculés par mandat)
+            − Factures fournisseurs à déduire ce mois (travaux, plomberie, syndic)
             − Régularisations de charges à restituer au locataire
             − Dépôts de garantie à restituer (baux terminés)
-            − Report du solde débiteur des mois précédents
 ```
 
 Si le résultat est **négatif**, le propriétaire est **débiteur** : rien n'est versé, le déficit est reporté.
 
-Certains propriétaires ont leur **versement désactivé** (`payment_enabled: false`). Ceux-là ne doivent jamais être versés tant que le motif n'est pas levé.
+### Versement désactivé
 
-**Mandats multiples.** Un propriétaire peut avoir signé plusieurs mandats de gestion à différentes époques, chacun avec son propre **taux d'honoraires** et son **jour de versement**. Chaque bien est rattaché à un mandat. Les honoraires se calculent mandat par mandat, pas globalement.
+Certains propriétaires ont leur `payment_enabled` à `false`. Ceux-là ne doivent **jamais** être versés tant que le motif n'est pas levé, quel que soit leur solde.
 
-**Défaut agence.** Si un mandat a `management_fee_rate` à `null`, applique le taux agence : **7%**. Si `payment_day` est à `null`, applique le jour agence : **10**.
+### Mandats multiples
 
-**Contexte temporel du cas.** On est le **8 avril 2026**. Les virements partiront le **10 avril**. Tu dois analyser les encaissements du mois de collecte **mars 2026**. Les paiements datés après le 31 mars (ex : rejets SEPA) peuvent affecter la validité de l'encaissement.
+Un propriétaire peut avoir signé **plusieurs mandats** de gestion à différentes époques, chacun avec son propre **taux d'honoraires** et son **jour de versement**. Chaque bien est rattaché à un mandat précis. Les honoraires doivent être calculés **mandat par mandat**, pas globalement.
+
+### Défauts agence
+
+Quand un mandat a ses conditions à `null`, l'agence applique ses valeurs par défaut :
+- `management_fee_rate: null` → taux agence : **7 %**
+- `payment_day: null` → jour agence : **le 10**
+
+### Contexte temporel du cas
+
+- On est le **8 avril 2026**
+- Les virements partiront le **10 avril 2026**
+- Le mois à analyser (collecte des loyers) est **mars 2026**
+- Les paiements datés **après le 31 mars** (ex : rejet SEPA du 5 avril) peuvent invalider un encaissement de mars — il faut les prendre en compte
 
 ---
 
@@ -53,15 +67,16 @@ Certains propriétaires ont leur **versement désactivé** (`payment_enabled: fa
 
 Construis l'interface que la comptable utilise chaque mois pour passer en revue les 113 propriétaires et rendre une décision pour chacun.
 
-**Tu construis tout toi-même :**
-1. Le **calcul du net à verser** pour chaque propriétaire, à partir des briques brutes (encaissements par bail, factures, mandats avec leurs taux, DG à restituer).
-2. L'**identification des situations à risque** — quels signaux tu remontes, avec quelle hiérarchie.
+Tu dois construire toi-même :
+
+1. Le **calcul du net à verser** pour chaque propriétaire, à partir des données brutes (encaissements par bail, factures, mandats avec leurs taux, DG à restituer).
+2. La **détection des situations à risque** — lesquelles tu remontes, avec quelle hiérarchie.
 3. La **classification** des propositions — lesquelles demandent de l'attention, lesquelles peuvent être validées sans friction.
-4. L'**UX de décision** : valider / bloquer avec motif / ajuster avec motif.
+4. L'**UX de décision** : valider, bloquer avec motif, ajuster avec motif.
 
-L'API te donne les **ressources métier de l'agence** (propriétaires, mandats, baux, paiements, factures). Il n'y a aucun endpoint "versements proposés" — ce concept de versement est précisément ce que tu dois construire au-dessus des données.
+L'API expose les ressources métier de l'agence (propriétaires, mandats, baux, paiements, factures) — rien de plus. Il n'y a **aucun endpoint "versements proposés"**, aucun calcul préfait, aucune classification préfabriquée. Ce concept de versement mensuel est précisément ce que tu construis au-dessus des données.
 
-Les actions (valider / bloquer / ajuster) sont mockées côté front — aucune mutation en base n'est requise.
+Les actions (valider, bloquer, ajuster) sont mockées côté front — aucune mutation en base n'est requise.
 
 ---
 
@@ -83,19 +98,23 @@ app/frontend/react/dashboard/App.tsx
 
 ### Endpoints API
 
-```
-GET /api/landlords                    — Liste des propriétaires avec leurs mandats,
-                                        biens, baux actifs (paiements du mois + post-mois),
-                                        factures et baux terminés. C'est la vue la plus
-                                        complète pour construire la revue mensuelle.
+**Endpoint principal** — contient tout ce dont tu as besoin pour la revue :
 
-GET /api/landlords/:id                — Même forme que l'index pour un propriétaire unique
-GET /api/mandates?landlord_id=X       — Mandats d'un propriétaire (ou tous si pas de filtre)
-GET /api/leases                       — Liste des baux
-GET /api/leases/:id                   — Détail d'un bail (historique complet des paiements)
-GET /api/properties                   — Liste des biens
-GET /api/invoices                     — Liste des factures fournisseurs
-GET /api/stats                        — KPIs globaux de l'agence (vue macro, informatif)
+```
+GET /api/landlords        — Liste des propriétaires, chacun avec ses mandats, biens,
+                            baux actifs, paiements du mois et post-mois, factures.
+GET /api/landlords/:id    — Même forme pour un propriétaire unique
+```
+
+**Endpoints complémentaires** — utiles si tu veux filtrer, zoomer, ou enrichir :
+
+```
+GET /api/mandates?landlord_id=X   — Mandats d'un propriétaire (ou tous)
+GET /api/leases                   — Liste des baux
+GET /api/leases/:id               — Détail d'un bail (historique complet des paiements)
+GET /api/properties               — Liste des biens
+GET /api/invoices                 — Liste des factures fournisseurs
+GET /api/stats                    — KPIs globaux de l'agence (vue macro)
 ```
 
 ### Documentation
@@ -104,7 +123,7 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 
 ---
 
-## 6. La forme d'un propriétaire (via `/api/landlords`)
+## 6. Exemple de payload `/api/landlords`
 
 ```jsonc
 {
@@ -153,7 +172,9 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 
           "tenants": [
             { "id": 123, "display_name": "Sarah Martin",
-              "caf_amount_cents": null,   // non-null = locataire bénéficie de la CAF
+              // null = pas d'aide CAF. Non-null = la CAF verse ce montant
+              // directement à l'agence chaque mois (paiement dissocié du locataire).
+              "caf_amount_cents": null,
               "share": "100.0", ... }
           ],
 
@@ -187,10 +208,28 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 
 ### Ce que tu dois construire à partir de ces briques
 
-- **Calcul du net** : loyers encaissés par bail (somme des `payments_collection_month` de type `rent`) − honoraires **par mandat** − factures à déduire − régularisations (`payment_type: regularization` négatifs) − DG à restituer (baux `terminated`) − éventuel report débiteur.
-- **Détection de situations** (non exhaustif — à toi de décider lesquelles tu traites) : versement désactivé, impayé partiel, CAF seule, rejet SEPA (via `payments_post_month`), propriétaire débiteur, bail qui expire bientôt, DG à restituer, nouveau mandat, factures lourdes pendantes, multi-biens, bail commercial.
-- **Classification et priorisation** : quelles propositions regrouper, lesquelles isoler, dans quel ordre les présenter.
-- **Interaction** : un flow de décision adapté à passer rapidement 113 cas.
+**Calcul du net à verser**
+- Somme des `payments_collection_month` de type `rent` par bail = loyers encaissés
+- Honoraires = loyers encaissés × taux **du mandat** rattaché au bien (avec fallback 7% si `null`)
+- Déductions : factures à retenir ce mois, régularisations de charges (montants négatifs en `payment_type: regularization`), dépôts de garantie à restituer (bail `terminated`)
+
+**Détection des situations** (liste non exhaustive — à toi de décider lesquelles tu traites et comment tu les hiérarchises)
+- Versement désactivé (`payment_enabled: false`)
+- Impayé ou paiement partiel (`payments_collection_month` < `total_due_cents`)
+- CAF seule (seul paiement = `payment_method: caf`, locataire n'a pas complété)
+- Rejet SEPA (paiement négatif dans `payments_post_month`)
+- Propriétaire débiteur (net calculé négatif)
+- Bail qui expire bientôt (`end_date` proche)
+- Dépôt de garantie à restituer (bail `terminated` récent)
+- Mandat récent (`mandate_started_at` récent)
+- Factures lourdes pendantes
+- Propriétaire multi-biens, multi-mandats, bail commercial
+
+**Classification et priorisation**
+Quelles propositions regrouper, lesquelles isoler, dans quel ordre les présenter. À toi de justifier.
+
+**Interaction**
+Un flow de décision adapté à passer rapidement 113 cas. Les actions (valider / bloquer / ajuster) nécessitent toutes un enregistrement traçable (motif pour bloquer/ajuster).
 
 ---
 
@@ -198,9 +237,11 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 
 | Phase | Durée | Description |
 |-------|-------|-------------|
-| Découverte | 15-20 min | Parcours la doc, explore `/api/landlords`, comprends le cycle financier |
-| Construction | 45-60 min | Code ta solution dans `App.tsx` |
-| Restitution | 30 min | Présentation de tes choix + démo en direct |
+| Découverte | 15-20 min | Parcours la doc métier, explore `/api/landlords`, comprends le cycle financier |
+| Construction | 45-55 min | Code ta solution dans `App.tsx` |
+| Restitution | 30-45 min | Présentation de tes choix + démo en direct |
+
+Le sujet est volontairement large. On ne s'attend pas à ce que tu traites tous les cas — on évalue ta capacité à choisir ce qui compte en priorité. Un MVP focalisé (calcul juste + cas à risque bien remontés) vaut mieux qu'une implémentation qui survole tout.
 
 ### Ce qu'on attend en restitution
 
@@ -215,11 +256,10 @@ Le dossier `resources/` contient 10 documents sur le métier de la gestion locat
 ## 8. Contraintes
 
 1. L'interface est desktop uniquement.
-2. Le design system et les composants sont fournis — utilise-les.
-3. Tu peux ajouter de nouveaux endpoints API si nécessaire.
-4. Tu peux créer de nouveaux composants React si nécessaire.
-5. Les actions (valider / bloquer / ajuster) sont mockées côté front — aucune mutation en base requise.
-6. Le sujet est volontairement large. On n'attend pas que tu traites chaque cas. On évalue ta capacité à prioriser, à modéliser le calcul correctement, et à livrer une expérience de décision cohérente.
+2. Utilise le design system et les composants fournis.
+3. Tu peux créer de nouveaux composants React si nécessaire, et de nouveaux endpoints API si tu en ressens le besoin (mais `/api/landlords` devrait suffire).
+4. Les actions (valider / bloquer / ajuster) sont mockées côté front — aucune mutation en base requise.
+5. Le sujet est volontairement large. On n'attend pas que tu traites chaque cas. On évalue ta capacité à prioriser, à modéliser le calcul correctement, et à livrer une expérience de décision cohérente.
 
 ---
 
