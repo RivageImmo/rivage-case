@@ -48,35 +48,26 @@ Certains propriétaires ont leur `payment_enabled` à `false`. Ceux-là ne doive
 
 Un propriétaire peut avoir signé **plusieurs mandats** de gestion à différentes époques, chacun avec son propre **taux d'honoraires** et son **jour de versement**. Chaque bien est rattaché à un mandat précis. Les honoraires doivent être calculés **mandat par mandat**, pas globalement.
 
-### Défauts agence
-
-Quand un mandat a ses conditions à `null`, l'agence applique ses valeurs par défaut :
-- `management_fee_rate: null` → taux agence : **7 %**
-- `payment_day: null` → jour agence : **le 10**
-
 ### Contexte temporel du cas
 
-- On est le **8 avril 2026**
-- Les virements partiront le **10 avril 2026**
-- Le mois à analyser (collecte des loyers) est **mars 2026**
-- Les paiements datés **après le 31 mars** (ex : rejet SEPA du 5 avril) peuvent invalider un encaissement de mars — il faut les prendre en compte
+- On est le **15 avril 2026**
+- Les virements partiront le **20 avril 2026**
+- Le mois à analyser (collecte des loyers) est **avril 2026** (le mois courant)
+- Les rejets SEPA du mois apparaissent comme des paiements **négatifs** dans le mois courant — ils annulent l'encaissement correspondant
 
 ---
 
 ## 4. Ta mission
 
-Construis l'interface que la comptable utilise chaque mois pour passer en revue les 113 propriétaires et rendre une décision pour chacun.
+Construis un **flow de versement des propriétaires** qui permette à la comptable de :
 
-Tu dois construire toi-même :
+- Avoir une **vue d'ensemble** des 113 propriétaires et identifier rapidement ceux qui demandent attention
+- Accéder au **détail d'un propriétaire** (breakdown du calcul, historique, signaux à arbitrer)
+- **Décider pour chacun** : valider le versement, bloquer avec motif, ajuster avec motif
 
-1. Le **calcul du net à verser** pour chaque propriétaire, à partir des données brutes (encaissements par bail, factures, mandats avec leurs taux, DG à restituer).
-2. La **détection des situations à risque** — lesquelles tu remontes, avec quelle hiérarchie.
-3. La **classification** des propositions — lesquelles demandent de l'attention, lesquelles peuvent être validées sans friction.
-4. L'**UX de décision** : valider, bloquer avec motif, ajuster avec motif.
+L'API expose les ressources métier brutes (propriétaires, mandats, baux, paiements, factures). Pas de montant proposé, pas de classification préfabriquée — c'est toi qui construis la couche produit au-dessus.
 
-L'API expose les ressources métier de l'agence (propriétaires, mandats, baux, paiements, factures) — rien de plus. Il n'y a **aucun endpoint "versements proposés"**, aucun calcul préfait, aucune classification préfabriquée. Ce concept de versement mensuel est précisément ce que tu construis au-dessus des données.
-
-Les actions (valider, bloquer, ajuster) sont mockées côté front — aucune mutation en base n'est requise.
+Les actions sont mockées côté front, aucune mutation en base n'est requise.
 
 ---
 

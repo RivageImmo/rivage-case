@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_02_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_03_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,8 +77,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_000000) do
     t.datetime "created_at", null: false
     t.date "ended_at"
     t.bigint "landlord_id", null: false
-    t.decimal "management_fee_rate", precision: 5, scale: 2
-    t.integer "payment_day"
+    t.decimal "management_fee_rate", precision: 5, scale: 2, default: "7.0", null: false
+    t.integer "payment_day", default: 10, null: false
     t.string "reference", null: false
     t.date "signed_at", null: false
     t.datetime "updated_at", null: false

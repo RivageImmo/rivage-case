@@ -846,12 +846,12 @@ MULTI_MANDATE_CASES.each_with_index do |config, idx|
 
   mandate_a = Mandate.create!(
     landlord: landlord, reference: "MAND-#{2021 + (idx % 3)}-#{1000 + idx}A",
-    management_fee_rate: config[:fees_a], payment_day: config[:day_a],
+    management_fee_rate: config[:fees_a], payment_day: config[:day_a] || 10,
     signed_at: Date.new(2021 + (idx % 3), [1, 3, 6, 9].sample, 15)
   )
   mandate_b = Mandate.create!(
     landlord: landlord, reference: "MAND-#{2023 + (idx % 2)}-#{2000 + idx}B",
-    management_fee_rate: config[:fees_b], payment_day: config[:day_b],
+    management_fee_rate: config[:fees_b], payment_day: config[:day_b] || 10,
     signed_at: Date.new(2023 + (idx % 2), [1, 3, 6, 9].sample, 15)
   )
 
@@ -874,8 +874,8 @@ Landlord.includes(:mandates, :properties).find_each do |landlord|
     mandate = Mandate.create!(
       landlord: landlord,
       reference: "MAND-#{landlord.id.to_s.rjust(4, '0')}",
-      management_fee_rate: landlord.management_fee_rate,
-      payment_day: landlord.payment_day,
+      management_fee_rate: landlord.management_fee_rate || 7.0,
+      payment_day: landlord.payment_day || 10,
       signed_at: landlord.created_at.to_date
     )
     landlord.properties.where(mandate_id: nil).update_all(mandate_id: mandate.id)
